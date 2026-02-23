@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "test:email": "ts-node --project pipeline/tsconfig.json scripts/test-email.ts",
+    "verify:db": "ts-node --project pipeline/tsconfig.json scripts/verify-db.ts"
   },
   "dependencies": {
     "@react-email/components": "^1.0.8",
