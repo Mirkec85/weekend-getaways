@@ -47,6 +47,8 @@ Progress: [████░░░░░░] 40%
 - [Phase 2 Plan 01]: Use insert + handle error code 23505 (not upsert) for subscriber creation — gives precise control over each duplicate state
 - [Phase 2 Plan 01]: unsubscribe_token doubles as confirm token — safe because status guards (pending/active) prevent cross-flow
 - [Phase 2 Plan 01]: No token expiry for MVP — pending subscribers stay pending and are excluded from sends
+- [Phase 2 Plan 02]: Check data.length === 0 (not .single()) on unsubscribe update — avoids PostgREST error on no-match, correctly handles invalid/already-unsubscribed tokens
+- [Phase 2 Plan 02]: Same invalid message for non-existent and already-unsubscribed tokens — no information leakage
 - [Phase 2 Plan 03]: Return 200 on DB failure for webhook handler — prevents Resend retry floods; errors logged via console.error
 - [Phase 2 Plan 03]: Spam complaints map to 'unsubscribed' status (not a separate status) — consistent semantics with unsubscribe flow
 
@@ -62,5 +64,5 @@ Progress: [████░░░░░░] 40%
 ## Session Continuity
 
 Last session: 2026-02-23
-Stopped at: Completed 02-03-PLAN.md — Resend webhook handler for bounces + complaints; Phase 2 complete
+Stopped at: Completed 02-02-PLAN.md — human verification approved, SUMMARY.md committed
 Resume file: None
