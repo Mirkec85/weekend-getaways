@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-02-19)
 ## Current Position
 
 Phase: 2 of 5 (Subscriber Sub-System)
-Plan: 1 of 3 in current phase
-Status: In progress
-Last activity: 2026-02-23 — Plan 02-01 complete (landing page, subscribe, confirm)
+Plan: 3 of 3 in current phase
+Status: Phase complete
+Last activity: 2026-02-23 — Plan 02-03 complete (Resend webhook handler for bounces + complaints)
 
-Progress: [███░░░░░░░] 27%
+Progress: [████░░░░░░] 40%
 
 ## Performance Metrics
 
@@ -28,7 +28,7 @@ Progress: [███░░░░░░░] 27%
 | Phase | Plans | Status |
 |-------|-------|--------|
 | 1. Foundation | 3/3 | Complete |
-| 2. Subscriber Sub-System | 1/3 | In progress |
+| 2. Subscriber Sub-System | 3/3 | Complete |
 | 3. Flight Pipeline | 0/3 | Not started |
 | 4. Email Assembly | 0/2 | Not started |
 | 5. Scheduling & Automation | 0/2 | Not started |
@@ -47,6 +47,8 @@ Progress: [███░░░░░░░] 27%
 - [Phase 2 Plan 01]: Use insert + handle error code 23505 (not upsert) for subscriber creation — gives precise control over each duplicate state
 - [Phase 2 Plan 01]: unsubscribe_token doubles as confirm token — safe because status guards (pending/active) prevent cross-flow
 - [Phase 2 Plan 01]: No token expiry for MVP — pending subscribers stay pending and are excluded from sends
+- [Phase 2 Plan 03]: Return 200 on DB failure for webhook handler — prevents Resend retry floods; errors logged via console.error
+- [Phase 2 Plan 03]: Spam complaints map to 'unsubscribed' status (not a separate status) — consistent semantics with unsubscribe flow
 
 ### Pending Todos
 
@@ -60,5 +62,5 @@ Progress: [███░░░░░░░] 27%
 ## Session Continuity
 
 Last session: 2026-02-23
-Stopped at: Completed 02-01-PLAN.md — landing page + subscribe + confirm flow done
+Stopped at: Completed 02-03-PLAN.md — Resend webhook handler for bounces + complaints; Phase 2 complete
 Resume file: None
