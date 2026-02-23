@@ -12,7 +12,7 @@ A weekly automated flight-deal email newsletter for Zagreb-based travelers. The 
 
 Decimal phases appear between their surrounding integers in numeric order.
 
-- [ ] **Phase 1: Foundation** - Provision the database and configure email authentication DNS records before any subscriber is collected or any email is sent
+- [x] **Phase 1: Foundation** - Provision the database and configure email authentication DNS records before any subscriber is collected or any email is sent
 - [ ] **Phase 2: Subscriber Sub-System** - Deploy the landing page and signup flow so list-building starts while the pipeline is built
 - [ ] **Phase 3: Flight Pipeline** - Build and validate the flight data fetcher, deal selector, and hotel estimator in isolation before wiring to email
 - [ ] **Phase 4: Email Assembly** - Compose and send the formatted deal email to real subscribers using tested data from Phase 3
@@ -31,9 +31,9 @@ Decimal phases appear between their surrounding integers in numeric order.
 **Plans**: 3 plans
 
 Plans:
-- [ ] 01-01-PLAN.md — Scaffold monorepo (Next.js root, /pipeline tsconfig, lib/db.ts, .env.example)
-- [ ] 01-02-PLAN.md — Configure Resend sending domain DNS (SPF, DKIM, DMARC) and verify deliverability
-- [ ] 01-03-PLAN.md — Provision Supabase project (eu-west-1) and apply database schema migrations
+- [x] 01-01-PLAN.md — Scaffold monorepo (Next.js root, /pipeline tsconfig, lib/db.ts, .env.example)
+- [x] 01-02-PLAN.md — Configure Resend sending domain DNS (SPF, DKIM, DMARC) and verify deliverability
+- [x] 01-03-PLAN.md — Provision Supabase project (eu-west-1) and apply database schema migrations
 
 ### Phase 2: Subscriber Sub-System
 **Goal**: Users can discover the service, sign up with GDPR consent, confirm their subscription via double opt-in, and unsubscribe at any time — deployed and live so list-building begins immediately.
@@ -106,7 +106,7 @@ Note: Phase 3 depends only on Phase 1 (not Phase 2) and can be worked in paralle
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation | 0/3 | Not started | - |
+| 1. Foundation | 3/3 | Complete | 2026-02-23 |
 | 2. Subscriber Sub-System | 0/3 | Not started | - |
 | 3. Flight Pipeline | 0/3 | Not started | - |
 | 4. Email Assembly | 0/2 | Not started | - |
