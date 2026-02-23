@@ -10,16 +10,16 @@ See: .planning/PROJECT.md (updated 2026-02-19)
 ## Current Position
 
 Phase: 2 of 5 (Subscriber Sub-System)
-Plan: 0 of 3 in current phase
-Status: Ready to plan
-Last activity: 2026-02-23 — Phase 1 complete (scaffold, Resend wired, Supabase verified)
+Plan: 1 of 3 in current phase
+Status: In progress
+Last activity: 2026-02-23 — Plan 02-01 complete (landing page, subscribe, confirm)
 
-Progress: [██░░░░░░░░] 20%
+Progress: [███░░░░░░░] 27%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 3
+- Total plans completed: 4
 - Average duration: —
 - Total execution time: —
 
@@ -27,8 +27,8 @@ Progress: [██░░░░░░░░] 20%
 
 | Phase | Plans | Status |
 |-------|-------|--------|
-| 1. Foundation | 3/3 | ✅ Complete |
-| 2. Subscriber Sub-System | 0/3 | In progress |
+| 1. Foundation | 3/3 | Complete |
+| 2. Subscriber Sub-System | 1/3 | In progress |
 | 3. Flight Pipeline | 0/3 | Not started |
 | 4. Email Assembly | 0/2 | Not started |
 | 5. Scheduling & Automation | 0/2 | Not started |
@@ -44,6 +44,9 @@ Progress: [██░░░░░░░░] 20%
 - [Phase 1]: Supabase project `olalbfyvdmlvhtislvjf` in eu-west-1 (Ireland); 3 tables live
 - [Phase 1]: Kiwi Tequila for flights, GitHub Actions cron, Vercel for hosting
 - [Roadmap]: Phase 3 depends only on Phase 1 — can run in parallel with Phase 2 if desired
+- [Phase 2 Plan 01]: Use insert + handle error code 23505 (not upsert) for subscriber creation — gives precise control over each duplicate state
+- [Phase 2 Plan 01]: unsubscribe_token doubles as confirm token — safe because status guards (pending/active) prevent cross-flow
+- [Phase 2 Plan 01]: No token expiry for MVP — pending subscribers stay pending and are excluded from sends
 
 ### Pending Todos
 
@@ -57,5 +60,5 @@ Progress: [██░░░░░░░░] 20%
 ## Session Continuity
 
 Last session: 2026-02-23
-Stopped at: Phase 1 complete — all 3 plans done, DB verified, Resend smoke test passed
+Stopped at: Completed 02-01-PLAN.md — landing page + subscribe + confirm flow done
 Resume file: None
