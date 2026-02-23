@@ -44,12 +44,12 @@ Plans:
   2. The user receives a confirmation email and becomes an active subscriber only after clicking the confirmation link
   3. A subscriber can click the unsubscribe link in any email and is immediately removed from the active list without logging in
   4. A hard bounce or spam complaint received via ESP webhook automatically removes the subscriber from the active list without manual intervention
-**Plans**: TBD
+**Plans**: 3 plans
 
 Plans:
-- [ ] 02-01: Build and deploy Next.js landing page with signup form and GDPR consent checkbox
-- [ ] 02-02: Implement POST /subscribe API (validate, deduplicate, insert, trigger double opt-in email)
-- [ ] 02-03: Implement GET /unsubscribe?token= API and ESP webhook handler for bounces and complaints
+- [ ] 02-01-PLAN.md — Landing page with GDPR signup form + subscribe API + double opt-in confirm API
+- [ ] 02-02-PLAN.md — One-click unsubscribe API + human verification of full subscriber lifecycle
+- [ ] 02-03-PLAN.md — Resend webhook handler for automatic bounce and complaint processing
 
 ### Phase 3: Flight Pipeline
 **Goal**: The system can fetch real weekend flights from Zagreb via Kiwi Tequila, select the top 3 qualifying deals, enrich them with hotel cost estimates, and handle the zero-results edge case — all verifiable without sending any email.
@@ -100,14 +100,14 @@ Plans:
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
+Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5
 
 Note: Phase 3 depends only on Phase 1 (not Phase 2) and can be worked in parallel with Phase 2 if desired. Phase 4 requires both Phase 2 and Phase 3 complete.
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Foundation | 3/3 | Complete | 2026-02-23 |
-| 2. Subscriber Sub-System | 0/3 | Not started | - |
+| 2. Subscriber Sub-System | 0/3 | In progress | - |
 | 3. Flight Pipeline | 0/3 | Not started | - |
 | 4. Email Assembly | 0/2 | Not started | - |
 | 5. Scheduling and Automation | 0/2 | Not started | - |
