@@ -4,8 +4,8 @@
     "module": "CommonJS",
     "moduleResolution": "node",
     "outDir": "../dist/pipeline",
-    "rootDir": "."
+    "rootDir": ".."
   },
-  "include": ["./**/*.ts"],
+  "include": ["./**/*.ts", "../lib/**/*.ts"],
   "exclude": ["node_modules"]
 }
