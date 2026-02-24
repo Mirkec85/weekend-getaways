@@ -13,7 +13,7 @@ A weekly automated flight-deal email newsletter for Zagreb-based travelers. The 
 Decimal phases appear between their surrounding integers in numeric order.
 
 - [x] **Phase 1: Foundation** - Provision the database and configure email authentication DNS records before any subscriber is collected or any email is sent
-- [ ] **Phase 2: Subscriber Sub-System** - Deploy the landing page and signup flow so list-building starts while the pipeline is built
+- [x] **Phase 2: Subscriber Sub-System** - Deploy the landing page and signup flow so list-building starts while the pipeline is built
 - [ ] **Phase 3: Flight Pipeline** - Build and validate the flight data fetcher, deal selector, and hotel estimator in isolation before wiring to email
 - [ ] **Phase 4: Email Assembly** - Compose and send the formatted deal email to real subscribers using tested data from Phase 3
 - [ ] **Phase 5: Scheduling and Automation** - Wire the full pipeline to a cron schedule with idempotency guards, logging, and a dead man's switch
@@ -47,9 +47,9 @@ Plans:
 **Plans**: 3 plans
 
 Plans:
-- [ ] 02-01-PLAN.md — Landing page with GDPR signup form + subscribe API + double opt-in confirm API
-- [ ] 02-02-PLAN.md — One-click unsubscribe API + human verification of full subscriber lifecycle
-- [ ] 02-03-PLAN.md — Resend webhook handler for automatic bounce and complaint processing
+- [x] 02-01-PLAN.md — Landing page with GDPR signup form + subscribe API + double opt-in confirm API
+- [x] 02-02-PLAN.md — One-click unsubscribe API + human verification of full subscriber lifecycle
+- [x] 02-03-PLAN.md — Resend webhook handler for automatic bounce and complaint processing
 
 ### Phase 3: Flight Pipeline
 **Goal**: The system can fetch real weekend flights from Zagreb via Kiwi Tequila, select the top 3 qualifying deals, enrich them with hotel cost estimates, and handle the zero-results edge case — all verifiable without sending any email.
@@ -107,7 +107,7 @@ Note: Phase 3 depends only on Phase 1 (not Phase 2) and can be worked in paralle
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Foundation | 3/3 | Complete | 2026-02-23 |
-| 2. Subscriber Sub-System | 0/3 | In progress | - |
+| 2. Subscriber Sub-System | 3/3 | Complete | 2026-02-24 |
 | 3. Flight Pipeline | 0/3 | Not started | - |
 | 4. Email Assembly | 0/2 | Not started | - |
 | 5. Scheduling and Automation | 0/2 | Not started | - |

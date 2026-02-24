@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "eslint",
     "test:email": "ts-node --project pipeline/tsconfig.json scripts/test-email.ts",
-    "verify:db": "ts-node --project pipeline/tsconfig.json scripts/verify-db.ts"
+    "verify:db": "ts-node --project pipeline/tsconfig.json scripts/verify-db.ts",
+    "reset:subscriber": "ts-node --project pipeline/tsconfig.json scripts/reset-test-subscriber.ts"
   },
   "dependencies": {
     "@react-email/components": "^1.0.8",
