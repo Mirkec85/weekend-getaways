@@ -60,12 +60,12 @@ Plans:
   2. The deal selector returns exactly 3 enriched deals containing destination name, flight price in EUR, departure/return dates, booking link, and hotel cost estimate
   3. When the API returns zero qualifying results, the pipeline exits cleanly via the defined fallback path without throwing an unhandled error
   4. Running the pipeline twice in the same week produces the same output without making duplicate API calls beyond the defined cache window
-**Plans**: TBD
+**Plans**: 3 plans
 
 Plans:
-- [ ] 03-01: Implement Flight Fetcher (Kiwi Tequila API integration, ZAG weekend search, price/duration filters)
-- [ ] 03-02: Implement Deal Selector (scoring logic, top-3 selection, zero-results fallback path)
-- [ ] 03-03: Implement Hotel Estimator (static JSON IATA-to-nightly-EUR lookup) and wire into deal enrichment
+- [ ] 03-01-PLAN.md — Flight fetcher (Kiwi Tequila API integration) and cache layer (Supabase deals_cache read/write)
+- [ ] 03-02-PLAN.md — Deal selector (top 3 cheapest unique destinations) and hotel estimate enricher (static JSON lookup)
+- [ ] 03-03-PLAN.md — Pipeline orchestrator wiring, date-fns install, EnrichedDeal type unification, end-to-end integration
 
 ### Phase 4: Email Assembly
 **Goal**: A correctly formatted, mobile-optimised HTML email with 3 deal cards is sent to all active subscribers using real pipeline output, and renders correctly in Gmail and iOS Mail before any automated send occurs.
