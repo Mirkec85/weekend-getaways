@@ -10,16 +10,16 @@ See: .planning/PROJECT.md (updated 2026-02-19)
 ## Current Position
 
 Phase: 3 of 5 (Flight Pipeline)
-Plan: 0 of 3 in current phase
-Status: Ready to plan
-Last activity: 2026-02-24 — Phase 2 complete (landing page, subscriber lifecycle, webhook handler)
+Plan: 1 of 3 in current phase
+Status: In progress
+Last activity: 2026-02-24 — Phase 3 Plan 01 complete (flight fetcher and cache layer)
 
-Progress: [████░░░░░░] 40%
+Progress: [████▌░░░░░] 47%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 6
+- Total plans completed: 7
 - Average duration: —
 - Total execution time: —
 
@@ -29,7 +29,7 @@ Progress: [████░░░░░░] 40%
 |-------|-------|--------|
 | 1. Foundation | 3/3 | ✅ Complete |
 | 2. Subscriber Sub-System | 3/3 | ✅ Complete |
-| 3. Flight Pipeline | 0/3 | In progress |
+| 3. Flight Pipeline | 1/3 | In progress |
 | 4. Email Assembly | 0/2 | Not started |
 | 5. Scheduling & Automation | 0/2 | Not started |
 
@@ -51,6 +51,10 @@ Progress: [████░░░░░░] 40%
 - [Phase 2 Plan 02]: Same invalid message for non-existent and already-unsubscribed tokens — no information leakage
 - [Phase 2 Plan 03]: Return 200 on DB failure for webhook handler — prevents Resend retry floods
 - [Phase 2 Plan 03]: Spam complaints map to 'unsubscribed' status (not a separate status)
+- [Phase 3 Plan 01]: date-fns installed as dependency (was missing) — required for addDays/format/getISOWeek
+- [Phase 3 Plan 01]: pipeline/tsconfig.json rootDir widened to '..' to allow ../lib/db relative import — original rootDir '.' blocked cross-directory imports
+- [Phase 3 Plan 01]: getWeekendWindow takes thursday?: Date param — enables testing without mocking global Date
+- [Phase 3 Plan 01]: Pipeline modules use relative imports (../lib/db) not @/ aliases — tsconfig paths not available in pipeline context
 
 ### Pending Todos
 
@@ -60,10 +64,10 @@ Progress: [████░░░░░░] 40%
 
 ### Blockers/Concerns
 
-- [Phase 3]: Kiwi Tequila API flexible date search shape needs hands-on validation; ToS cache duration limits must be confirmed before building the fetcher
+- [Phase 3]: Kiwi Tequila API ToS cache duration limits must be confirmed before first live run (validation partially addressed — fetcher built with correct parameters)
 
 ## Session Continuity
 
 Last session: 2026-02-24
-Stopped at: Phase 2 complete — all 3 plans done, build passes, lifecycle human-verified
+Stopped at: Completed 03-01-PLAN.md — flight fetcher and cache layer modules created
 Resume file: None
