@@ -1,31 +1,9 @@
 /**
  * Deal Selector — pick the top N cheapest unique-destination flights.
- *
- * NOTE: TequilaFlight is defined here for autonomous compilation (Plan 02 runs
- * in parallel with Plan 01 which creates fetcher.ts). Plan 03 (orchestrator)
- * will consolidate the type — selector.ts will be updated to import from
- * './fetcher' once fetcher.ts exists.
  */
+import type { TequilaFlight } from './fetcher'
 
-export interface TequilaFlight {
-  id: string
-  price: number
-  cityTo: string
-  cityCodeTo: string
-  flyTo: string
-  countryTo: { name: string; code: string }
-  local_departure: string
-  local_arrival: string
-  deep_link: string
-  route: Array<{
-    flyFrom: string
-    flyTo: string
-    cityFrom: string
-    cityTo: string
-    local_departure: string
-    local_arrival: string
-  }>
-}
+export type { TequilaFlight }
 
 export interface Deal {
   destination_iata: string

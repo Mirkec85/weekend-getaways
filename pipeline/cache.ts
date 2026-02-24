@@ -1,18 +1,8 @@
 import { getISOWeek, getISOWeekYear } from 'date-fns'
 import { supabase } from '../lib/db'
+import type { EnrichedDeal } from './enricher'
 
-/**
- * Shape of an enriched deal as it flows from selector+enricher into the cache.
- */
-export interface EnrichedDeal {
-  destination_iata: string
-  destination_name: string
-  price_eur: number
-  depart_at: string
-  return_at: string
-  booking_url: string
-  hotel_estimate_eur: number | null
-}
+export type { EnrichedDeal }
 
 /**
  * Produces an ISO week key string in 'YYYY-WNN' format (e.g. '2026-W09').
