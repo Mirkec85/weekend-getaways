@@ -14,7 +14,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 
 - [x] **Phase 1: Foundation** - Provision the database and configure email authentication DNS records before any subscriber is collected or any email is sent
 - [x] **Phase 2: Subscriber Sub-System** - Deploy the landing page and signup flow so list-building starts while the pipeline is built
-- [ ] **Phase 3: Flight Pipeline** - Build and validate the flight data fetcher, deal selector, and hotel estimator in isolation before wiring to email
+- [x] **Phase 3: Flight Pipeline** - Build and validate the flight data fetcher, deal selector, and hotel estimator in isolation before wiring to email
 - [ ] **Phase 4: Email Assembly** - Compose and send the formatted deal email to real subscribers using tested data from Phase 3
 - [ ] **Phase 5: Scheduling and Automation** - Wire the full pipeline to a cron schedule with idempotency guards, logging, and a dead man's switch
 
@@ -63,9 +63,9 @@ Plans:
 **Plans**: 3 plans
 
 Plans:
-- [ ] 03-01-PLAN.md — Flight fetcher (Kiwi Tequila API integration) and cache layer (Supabase deals_cache read/write)
-- [ ] 03-02-PLAN.md — Deal selector (top 3 cheapest unique destinations) and hotel estimate enricher (static JSON lookup)
-- [ ] 03-03-PLAN.md — Pipeline orchestrator wiring, date-fns install, EnrichedDeal type unification, end-to-end integration
+- [x] 03-01-PLAN.md — Flight fetcher (Kiwi Tequila API integration) and cache layer (Supabase deals_cache read/write)
+- [x] 03-02-PLAN.md — Deal selector (top 3 cheapest unique destinations) and hotel estimate enricher (static JSON lookup)
+- [x] 03-03-PLAN.md — Pipeline orchestrator wiring, date-fns install, EnrichedDeal type unification, end-to-end integration
 
 ### Phase 4: Email Assembly
 **Goal**: A correctly formatted, mobile-optimised HTML email with 3 deal cards is sent to all active subscribers using real pipeline output, and renders correctly in Gmail and iOS Mail before any automated send occurs.
@@ -108,6 +108,6 @@ Note: Phase 3 depends only on Phase 1 (not Phase 2) and can be worked in paralle
 |-------|----------------|--------|-----------|
 | 1. Foundation | 3/3 | Complete | 2026-02-23 |
 | 2. Subscriber Sub-System | 3/3 | Complete | 2026-02-24 |
-| 3. Flight Pipeline | 0/3 | Not started | - |
+| 3. Flight Pipeline | 3/3 | Complete | 2026-02-24 |
 | 4. Email Assembly | 0/2 | Not started | - |
 | 5. Scheduling and Automation | 0/2 | Not started | - |
