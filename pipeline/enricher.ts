@@ -25,7 +25,7 @@ export type EnrichedDeal = Deal & {
  */
 export function enrichWithHotelEstimate(deals: Deal[]): EnrichedDeal[] {
   // eslint-disable-next-line @typescript-eslint/no-var-requires
-  const estimates: Record<string, number> = require('../../data/hotel-estimates.json')
+  const estimates: Record<string, number> = require('../data/hotel-estimates.json')
 
   return deals.map((deal) => ({
     ...deal,
