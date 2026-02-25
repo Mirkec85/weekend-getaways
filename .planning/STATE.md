@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-02-19)
 
 **Core value:** Find and deliver the cheapest weekend flights from Zagreb so budget-conscious travelers can make spontaneous decisions without doing the research themselves.
-**Current focus:** Phase 3 — Flight Pipeline
+**Current focus:** Phase 4 — Email Assembly
 
 ## Current Position
 
-Phase: 3 of 5 complete → next: Phase 4 (Email Assembly)
-Plan: all plans complete
-Status: ✅ Phase 3 verified and complete
-Last activity: 2026-02-24 — Phase 3 verified; enricher.ts require path fixed (../../→../); ROADMAP updated
+Phase: 4 of 5 in progress → 1/2 plans complete
+Plan: 04-01 complete → next: 04-02 (send script)
+Status: 🔄 Phase 4 in progress
+Last activity: 2026-02-25 — 04-01 executed; WeeklyDeals.tsx template and blurbs.json created
 
-Progress: [██████░░░░] 60%
+Progress: [███████░░░] 65%
 
 ## Performance Metrics
 
@@ -30,13 +30,14 @@ Progress: [██████░░░░] 60%
 | 1. Foundation | 3/3 | ✅ Complete |
 | 2. Subscriber Sub-System | 3/3 | ✅ Complete |
 | 3. Flight Pipeline | 3/3 | ✅ Complete |
-| 4. Email Assembly | 0/2 | Not started |
+| 4. Email Assembly | 1/2 | 🔄 In progress |
 | 5. Scheduling & Automation | 0/2 | Not started |
 
 | Plan | Duration | Tasks | Files |
 |------|----------|-------|-------|
 | 03-02 | 12min | 2 | 3 |
 | 03-03 | — | 2 | 3 |
+| 04-01 | 3min | 2 | 3 |
 
 *Updated after each plan completion*
 
@@ -62,6 +63,9 @@ Progress: [██████░░░░] 60%
 - [Phase 3 Plan 01]: Pipeline modules use relative imports (../lib/db) not @/ aliases — tsconfig paths not available in pipeline context
 - [Phase 3 Plan 03]: pipeline/index.ts uses require() (not import declarations) for pipeline modules — prevents TypeScript hoisting requires above the inline .env.local loading step
 - [Phase 3 Plan 03]: TequilaFlight single source of truth in pipeline/fetcher.ts; EnrichedDeal single source of truth in pipeline/enricher.ts (selector.ts and cache.ts re-export)
+- [Phase 4 Plan 01]: WeeklyDeals component uses self-contained DealCard interface (pre-formatted strings) — template decoupled from pipeline DB types; send script handles all date/URL formatting
+- [Phase 4 Plan 01]: render() and toPlainText() must be imported from @react-email/components (not @react-email/render) — standalone @react-email/render is only a nested dep, not top-level installed
+- [Phase 4 Plan 01]: data/blurbs.json flat Record<string, string> mirrors hotel-estimates.json pattern — 46 entries, loaded via require('../data/blurbs.json')
 
 ### Pending Todos
 
@@ -75,6 +79,6 @@ Progress: [██████░░░░] 60%
 
 ## Session Continuity
 
-Last session: 2026-02-24
-Stopped at: Phase 3 complete — all 3 plans executed, pipeline orchestrator wired and committed
+Last session: 2026-02-25
+Stopped at: Completed 04-01-PLAN.md — WeeklyDeals.tsx template and blurbs.json created; next: 04-02 (send script)
 Resume file: None
