@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-02-19)
 
 **Core value:** Find and deliver the cheapest weekend flights from Zagreb so budget-conscious travelers can make spontaneous decisions without doing the research themselves.
-**Current focus:** Phase 4 — Email Assembly
+**Current focus:** Phase 5 — Scheduling and Automation
 
 ## Current Position
 
-Phase: 4 of 5 in progress → 1/2 plans complete
-Plan: 04-01 complete → next: 04-02 (send script)
-Status: 🔄 Phase 4 in progress
-Last activity: 2026-02-25 — 04-01 executed; WeeklyDeals.tsx template and blurbs.json created
+Phase: 4 of 5 complete → next: Phase 5 (scheduling)
+Plan: 04-02 complete → ready to plan Phase 5
+Status: ✅ Phase 4 complete
+Last activity: 2026-02-25 — 04-02 executed; send.ts, full-width template with city images, city-images.json created; preview approved
 
-Progress: [███████░░░] 65%
+Progress: [████████░░] 80%
 
 ## Performance Metrics
 
@@ -30,7 +30,7 @@ Progress: [███████░░░] 65%
 | 1. Foundation | 3/3 | ✅ Complete |
 | 2. Subscriber Sub-System | 3/3 | ✅ Complete |
 | 3. Flight Pipeline | 3/3 | ✅ Complete |
-| 4. Email Assembly | 1/2 | 🔄 In progress |
+| 4. Email Assembly | 2/2 | ✅ Complete |
 | 5. Scheduling & Automation | 0/2 | Not started |
 
 | Plan | Duration | Tasks | Files |
@@ -38,6 +38,7 @@ Progress: [███████░░░] 65%
 | 03-02 | 12min | 2 | 3 |
 | 03-03 | — | 2 | 3 |
 | 04-01 | 3min | 2 | 3 |
+| 04-02 | — | 3 | 4 |
 
 *Updated after each plan completion*
 
@@ -66,6 +67,9 @@ Progress: [███████░░░] 65%
 - [Phase 4 Plan 01]: WeeklyDeals component uses self-contained DealCard interface (pre-formatted strings) — template decoupled from pipeline DB types; send script handles all date/URL formatting
 - [Phase 4 Plan 01]: render() and toPlainText() must be imported from @react-email/components (not @react-email/render) — standalone @react-email/render is only a nested dep, not top-level installed
 - [Phase 4 Plan 01]: data/blurbs.json flat Record<string, string> mirrors hotel-estimates.json pattern — 46 entries, loaded via require('../data/blurbs.json')
+- [Phase 4 Plan 02]: Per-subscriber HTML render inside batch loop — O(n) renders so each gets personalised unsubscribeUrl; ~10ms/call is acceptable
+- [Phase 4 Plan 02]: data/city-images.json — 65 IATA codes → Unsplash source URLs; imageUrl optional in DealCard (falls back to single-column card)
+- [Phase 4 Plan 02]: send.ts uses resend.batch.send(chunk, { idempotencyKey }) — key format: weekly-send/{weekKey}/batch-{n}; send_log upsert with ignoreDuplicates:true for retry safety
 
 ### Pending Todos
 
@@ -80,5 +84,5 @@ Progress: [███████░░░] 65%
 ## Session Continuity
 
 Last session: 2026-02-25
-Stopped at: Completed 04-01-PLAN.md — WeeklyDeals.tsx template and blurbs.json created; next: 04-02 (send script)
+Stopped at: Phase 4 complete — send.ts, full-width template with city images, city-images.json; next: plan Phase 5 (scheduling & automation)
 Resume file: None

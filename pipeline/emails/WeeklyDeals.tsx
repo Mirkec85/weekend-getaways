@@ -5,6 +5,9 @@ import {
   Preview,
   Container,
   Section,
+  Row,
+  Column,
+  Img,
   Text,
   Heading,
   Hr,
@@ -23,12 +26,41 @@ export interface DealCard {
   hotelEstimateEur: number  // from hotel-estimates or default 80
   observedLabel: string     // e.g. "Thu 19 Feb 08:12 CET"
   bookingUrl: string        // already has UTM params appended
+  imageUrl?: string         // optional city photo URL
 }
 
 export interface WeeklyDealsProps {
   deals: DealCard[]
   weekLabel: string         // e.g. "Weekend of 21-23 Feb 2026"
   unsubscribeUrl?: string   // footer link
+}
+
+// ── Sub-component ─────────────────────────────────────────────────────────────
+
+function DealCardText({ deal }: { deal: DealCard }) {
+  return (
+    <>
+      <Heading as="h2" style={h2Style}>
+        {deal.destinationName}
+      </Heading>
+      <Text style={priceStyle}>
+        Flight from EUR {deal.flightPriceEur}
+      </Text>
+      <Text style={metaStyle}>
+        {deal.departLabel} {'->'} {deal.returnLabel}
+      </Text>
+      <Text style={blurbStyle}>{deal.blurb}</Text>
+      <Text style={metaStyle}>
+        Hotel est. ~EUR {deal.hotelEstimateEur}/night
+      </Text>
+      <Text style={observedStyle}>
+        Observed: {deal.observedLabel}
+      </Text>
+      <Link href={deal.bookingUrl} style={ctaStyle}>
+        Book now -&gt;
+      </Link>
+    </>
+  )
 }
 
 // ── Component ────────────────────────────────────────────────────────────────
@@ -59,25 +91,28 @@ export default function WeeklyDeals({
           {/* Deal cards */}
           {deals.map((deal, i) => (
             <Section key={i} style={cardStyle}>
-              <Heading as="h2" style={h2Style}>
-                {deal.destinationName}
-              </Heading>
-              <Text style={priceStyle}>
-                Flight from EUR {deal.flightPriceEur}
-              </Text>
-              <Text style={metaStyle}>
-                {deal.departLabel} {'->'} {deal.returnLabel}
-              </Text>
-              <Text style={blurbStyle}>{deal.blurb}</Text>
-              <Text style={metaStyle}>
-                Hotel est. ~EUR {deal.hotelEstimateEur}/night
-              </Text>
-              <Text style={observedStyle}>
-                Observed: {deal.observedLabel}
-              </Text>
-              <Link href={deal.bookingUrl} style={ctaStyle}>
-                Book now -&gt;
-              </Link>
+              {deal.imageUrl ? (
+                <Row>
+                  <Column style={imageColStyle}>
+                    <Img
+                      src={deal.imageUrl}
+                      width={180}
+                      height={120}
+                      alt={deal.destinationName}
+                      style={imgStyle}
+                    />
+                  </Column>
+                  <Column style={textColStyle}>
+                    <DealCardText deal={deal} />
+                  </Column>
+                </Row>
+              ) : (
+                <Row>
+                  <Column>
+                    <DealCardText deal={deal} />
+                  </Column>
+                </Row>
+              )}
             </Section>
           ))}
 
@@ -106,8 +141,6 @@ const bodyStyle: React.CSSProperties = {
 }
 
 const containerStyle: React.CSSProperties = {
-  maxWidth: '600px',
-  margin: '0 auto',
   backgroundColor: '#ffffff',
   padding: '24px',
 }
@@ -134,6 +167,22 @@ const cardStyle: React.CSSProperties = {
   padding: '16px',
   borderRadius: '8px',
   marginBottom: '24px',
+}
+
+const imageColStyle: React.CSSProperties = {
+  width: '180px',
+  verticalAlign: 'top',
+  paddingRight: '16px',
+}
+
+const imgStyle: React.CSSProperties = {
+  borderRadius: '6px',
+  display: 'block',
+  objectFit: 'cover',
+}
+
+const textColStyle: React.CSSProperties = {
+  verticalAlign: 'top',
 }
 
 const h2Style: React.CSSProperties = {

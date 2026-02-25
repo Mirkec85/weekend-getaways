@@ -106,9 +106,10 @@ async function main() {
     process.exit(1)
   }
 
-  // ── Step 3: Load blurbs ───────────────────────────────────────────────────
+  // ── Step 3: Load blurbs and city images ──────────────────────────────────
   /* eslint-disable @typescript-eslint/no-require-imports */
   const blurbs: Record<string, string> = require('../data/blurbs.json')
+  const cityImages: Record<string, string> = require('../data/city-images.json')
   /* eslint-enable @typescript-eslint/no-require-imports */
 
   // ── Step 4: Build DealCard[] from deals_cache rows ────────────────────────
@@ -130,6 +131,7 @@ async function main() {
     hotelEstimateEur: deal.hotel_estimate ?? 80,
     observedLabel: formatObservedCET(deal.observed_at),
     bookingUrl: addUtmParams(deal.booking_url, deal.destination_name),
+    imageUrl: cityImages[deal.destination_iata],
   }))
 
   // ── Step 5: Build weekLabel ───────────────────────────────────────────────

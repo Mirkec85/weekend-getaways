@@ -15,7 +15,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 1: Foundation** - Provision the database and configure email authentication DNS records before any subscriber is collected or any email is sent
 - [x] **Phase 2: Subscriber Sub-System** - Deploy the landing page and signup flow so list-building starts while the pipeline is built
 - [x] **Phase 3: Flight Pipeline** - Build and validate the flight data fetcher, deal selector, and hotel estimator in isolation before wiring to email
-- [ ] **Phase 4: Email Assembly** - Compose and send the formatted deal email to real subscribers using tested data from Phase 3
+- [x] **Phase 4: Email Assembly** - Compose and send the formatted deal email to real subscribers using tested data from Phase 3
 - [ ] **Phase 5: Scheduling and Automation** - Wire the full pipeline to a cron schedule with idempotency guards, logging, and a dead man's switch
 
 ## Phase Details
@@ -79,8 +79,8 @@ Plans:
 **Plans**: TBD
 
 Plans:
-- [ ] 04-01: Build React Email HTML template (deal cards with all required fields, unsubscribe footer, mobile layout, plain-text fallback)
-- [ ] 04-02: Implement Email Composer (injects deal data into template) and Email Sender (Resend integration, subscriber query, send loop, receipt collection)
+- [x] 04-01: Build React Email HTML template (deal cards with all required fields, unsubscribe footer, mobile layout, plain-text fallback)
+- [x] 04-02: Implement Email Composer (injects deal data into template) and Email Sender (Resend integration, subscriber query, send loop, receipt collection)
 
 ### Phase 5: Scheduling and Automation
 **Goal**: The full pipeline runs automatically every Thursday without manual intervention, double-sends are impossible, failures are detected within hours, and the operator can disable a send without touching code.
@@ -109,5 +109,5 @@ Note: Phase 3 depends only on Phase 1 (not Phase 2) and can be worked in paralle
 | 1. Foundation | 3/3 | Complete | 2026-02-23 |
 | 2. Subscriber Sub-System | 3/3 | Complete | 2026-02-24 |
 | 3. Flight Pipeline | 3/3 | Complete | 2026-02-24 |
-| 4. Email Assembly | 0/2 | Not started | - |
+| 4. Email Assembly | 2/2 | Complete | 2026-02-25 |
 | 5. Scheduling and Automation | 0/2 | Not started | - |
