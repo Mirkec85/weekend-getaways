@@ -6,6 +6,6 @@
     "outDir": "../dist/pipeline",
     "rootDir": ".."
   },
-  "include": ["./**/*.ts", "../lib/**/*.ts"],
+  "include": ["./**/*.ts", "./**/*.tsx", "../lib/**/*.ts"],
   "exclude": ["node_modules"]
 }
