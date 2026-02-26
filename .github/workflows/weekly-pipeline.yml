@@ -1,0 +1,61 @@
+name: Weekly Pipeline
+
+on:
+  schedule:
+    - cron: '0 7 * * 4'   # Thursday 08:00 CET (UTC+1, winter Nov-Mar)
+    - cron: '0 6 * * 4'   # Thursday 08:00 CEST (UTC+2, summer Apr-Oct)
+  workflow_dispatch: {}    # Manual trigger via GitHub UI
+
+jobs:
+  run-pipeline:
+    runs-on: ubuntu-latest
+    # Kill-switch: set repository variable SEND_ENABLED to 'false' to skip.
+    # Uses vars (NOT secrets) because secrets cannot be read in if: conditions.
+    # When SEND_ENABLED is unset, vars.SEND_ENABLED returns '' which is NOT 'false',
+    # so the pipeline runs by default (no variable needed for normal operation).
+    if: ${{ vars.SEND_ENABLED != 'false' }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Fetch and cache deals (index.ts)
+        run: npx ts-node --project pipeline/tsconfig.json pipeline/index.ts
+        env:
+          KIWI_API_KEY: ${{ secrets.KIWI_API_KEY }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+
+      - name: Send emails (send.ts)
+        run: npx ts-node --project pipeline/tsconfig.json pipeline/send.ts
+        env:
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          RESEND_FROM_ADDRESS: ${{ secrets.RESEND_FROM_ADDRESS }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+          NEXT_PUBLIC_BASE_URL: ${{ secrets.NEXT_PUBLIC_BASE_URL }}
+
+  ping-success:
+    runs-on: ubuntu-latest
+    needs: [run-pipeline]
+    if: ${{ success() }}
+    steps:
+      - name: Ping Healthchecks.io (success)
+        run: curl -fsS -m 10 --retry 5 ${{ secrets.HEALTHCHECKS_PING_URL }}
+
+  ping-failure:
+    runs-on: ubuntu-latest
+    needs: [run-pipeline]
+    if: ${{ failure() }}
+    steps:
+      - name: Ping Healthchecks.io (failure)
+        run: curl -fsS -m 10 --retry 5 ${{ secrets.HEALTHCHECKS_PING_URL }}/fail
