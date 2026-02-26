@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-02-19)
 
 **Core value:** Find and deliver the cheapest weekend flights from Zagreb so budget-conscious travelers can make spontaneous decisions without doing the research themselves.
-**Current focus:** Phase 5 — Scheduling and Automation
+**Current focus:** All phases complete — pending Kiwi API key for live pipeline run
 
 ## Current Position
 
-Phase: 5 of 5 in progress
-Plan: 05-01 complete → next: 05-02
-Status: 🔄 Phase 5 in progress (1/2 plans complete)
-Last activity: 2026-02-26 — 05-01 executed; weekly-pipeline.yml and keepalive.yml created; GitHub Actions cron + HC monitoring + kill-switch + keepalive
+Phase: 5 of 5 complete (with one deferred item)
+Plan: 05-02 complete
+Status: ✅ All phases complete
+Last activity: 2026-02-26 — Vercel deployed, Tests 3 & 4 verified, keepalive fixed, Phase 5 done
 
-Progress: [█████████░] 90%
+Progress: [██████████] 100%
 
 ## Performance Metrics
 
@@ -31,7 +31,7 @@ Progress: [█████████░] 90%
 | 2. Subscriber Sub-System | 3/3 | ✅ Complete |
 | 3. Flight Pipeline | 3/3 | ✅ Complete |
 | 4. Email Assembly | 2/2 | ✅ Complete |
-| 5. Scheduling & Automation | 1/2 | 🔄 In progress |
+| 5. Scheduling & Automation | 2/2 | ✅ Complete |
 
 | Plan | Duration | Tasks | Files |
 |------|----------|-------|-------|
@@ -74,23 +74,22 @@ Progress: [█████████░] 90%
 - [Phase 5 Plan 01]: Dual cron (0 7 * * 4 + 0 6 * * 4) targets Thursday 08:00 CET/CEST — idempotency guards in index.ts and send.ts handle DST transition double-fires safely
 - [Phase 5 Plan 01]: vars.SEND_ENABLED != 'false' for kill-switch — vars context readable in if: conditions; unset variable returns '' (not 'false') so default is enabled; secrets context NOT usable in if: conditions
 - [Phase 5 Plan 01]: Step-level env: blocks (not workflow/job level) — limits secret exposure to only the steps that consume them; KIWI_API_KEY only on index.ts step, RESEND_API_KEY only on send.ts step
-- [Phase 5 Plan 01]: gautamkrishnar/keepalive-workflow@v2 uses GitHub API for activity (not commits) — prevents 60-day schedule suspension without polluting git history
+- [Phase 5 Plan 01]: gautamkrishnar/keepalive-workflow@v2 blocked by GitHub Actions policy — replaced with inline empty-commit approach using only actions/checkout@v4; requires contents: write permission
+- [Phase 5 Plan 02]: Vercel was missing app/layout.tsx, globals.css, postcss.config.js — files were never committed; also postcss.config.mjs (ESM) replaced with postcss.config.js (CJS) for Turbopack compatibility
 
 ### Pending Todos
 
+- **KIWI_API_KEY**: Obtain from Kiwi Tequila (tequila.kiwi.com) → add as GitHub Secret → run Tests 1 & 2 (manual trigger + idempotency)
 - DNS: SPF/DKIM/DMARC still needed on a real sending domain before launch (01-02 deferred)
 - Privacy policy draft needed before subscriber #1
 - RESEND_WEBHOOK_SECRET: add to .env.local and Vercel after creating webhook in Resend dashboard
-- GitHub Secrets: add all 7 secrets (SUPABASE_URL, SUPABASE_ANON_KEY, KIWI_API_KEY, RESEND_API_KEY, RESEND_FROM_ADDRESS, NEXT_PUBLIC_BASE_URL, HEALTHCHECKS_PING_URL) to repo before first automated run
-- Healthchecks.io: create "Weekly Pipeline" check (period=1 week, grace=4 hours), copy ping URL to GitHub secret
 
 ### Blockers/Concerns
 
-- [Phase 3]: Kiwi Tequila API ToS cache duration limits must be confirmed before first live run (validation partially addressed — fetcher built with correct parameters)
-- [Phase 5]: GitHub Secrets must be configured before the workflow will function — pipeline will fail silently on missing env vars
+- [Phase 3]: Kiwi Tequila API key not yet obtained — pipeline fetch step will fail until resolved
 
 ## Session Continuity
 
 Last session: 2026-02-26
-Stopped at: Phase 5 Plan 01 complete — weekly-pipeline.yml and keepalive.yml created; next: 05-02
+Stopped at: All 5 phases complete. Vercel live. Kill-switch and keepalive verified. Blocked on KIWI_API_KEY for first live pipeline run.
 Resume file: None
