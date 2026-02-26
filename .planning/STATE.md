@@ -9,17 +9,17 @@ See: .planning/PROJECT.md (updated 2026-02-19)
 
 ## Current Position
 
-Phase: 4 of 5 complete → next: Phase 5 (scheduling)
-Plan: 04-02 complete → ready to plan Phase 5
-Status: ✅ Phase 4 complete
-Last activity: 2026-02-25 — 04-02 executed; send.ts, full-width template with city images, city-images.json created; preview approved
+Phase: 5 of 5 in progress
+Plan: 05-01 complete → next: 05-02
+Status: 🔄 Phase 5 in progress (1/2 plans complete)
+Last activity: 2026-02-26 — 05-01 executed; weekly-pipeline.yml and keepalive.yml created; GitHub Actions cron + HC monitoring + kill-switch + keepalive
 
-Progress: [████████░░] 80%
+Progress: [█████████░] 90%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 8
+- Total plans completed: 9
 - Average duration: —
 - Total execution time: —
 
@@ -31,7 +31,7 @@ Progress: [████████░░] 80%
 | 2. Subscriber Sub-System | 3/3 | ✅ Complete |
 | 3. Flight Pipeline | 3/3 | ✅ Complete |
 | 4. Email Assembly | 2/2 | ✅ Complete |
-| 5. Scheduling & Automation | 0/2 | Not started |
+| 5. Scheduling & Automation | 1/2 | 🔄 In progress |
 
 | Plan | Duration | Tasks | Files |
 |------|----------|-------|-------|
@@ -39,6 +39,7 @@ Progress: [████████░░] 80%
 | 03-03 | — | 2 | 3 |
 | 04-01 | 3min | 2 | 3 |
 | 04-02 | — | 3 | 4 |
+| 05-01 | 2min | 2 | 2 |
 
 *Updated after each plan completion*
 
@@ -70,19 +71,26 @@ Progress: [████████░░] 80%
 - [Phase 4 Plan 02]: Per-subscriber HTML render inside batch loop — O(n) renders so each gets personalised unsubscribeUrl; ~10ms/call is acceptable
 - [Phase 4 Plan 02]: data/city-images.json — 65 IATA codes → Unsplash source URLs; imageUrl optional in DealCard (falls back to single-column card)
 - [Phase 4 Plan 02]: send.ts uses resend.batch.send(chunk, { idempotencyKey }) — key format: weekly-send/{weekKey}/batch-{n}; send_log upsert with ignoreDuplicates:true for retry safety
+- [Phase 5 Plan 01]: Dual cron (0 7 * * 4 + 0 6 * * 4) targets Thursday 08:00 CET/CEST — idempotency guards in index.ts and send.ts handle DST transition double-fires safely
+- [Phase 5 Plan 01]: vars.SEND_ENABLED != 'false' for kill-switch — vars context readable in if: conditions; unset variable returns '' (not 'false') so default is enabled; secrets context NOT usable in if: conditions
+- [Phase 5 Plan 01]: Step-level env: blocks (not workflow/job level) — limits secret exposure to only the steps that consume them; KIWI_API_KEY only on index.ts step, RESEND_API_KEY only on send.ts step
+- [Phase 5 Plan 01]: gautamkrishnar/keepalive-workflow@v2 uses GitHub API for activity (not commits) — prevents 60-day schedule suspension without polluting git history
 
 ### Pending Todos
 
 - DNS: SPF/DKIM/DMARC still needed on a real sending domain before launch (01-02 deferred)
 - Privacy policy draft needed before subscriber #1
 - RESEND_WEBHOOK_SECRET: add to .env.local and Vercel after creating webhook in Resend dashboard
+- GitHub Secrets: add all 7 secrets (SUPABASE_URL, SUPABASE_ANON_KEY, KIWI_API_KEY, RESEND_API_KEY, RESEND_FROM_ADDRESS, NEXT_PUBLIC_BASE_URL, HEALTHCHECKS_PING_URL) to repo before first automated run
+- Healthchecks.io: create "Weekly Pipeline" check (period=1 week, grace=4 hours), copy ping URL to GitHub secret
 
 ### Blockers/Concerns
 
 - [Phase 3]: Kiwi Tequila API ToS cache duration limits must be confirmed before first live run (validation partially addressed — fetcher built with correct parameters)
+- [Phase 5]: GitHub Secrets must be configured before the workflow will function — pipeline will fail silently on missing env vars
 
 ## Session Continuity
 
-Last session: 2026-02-25
-Stopped at: Phase 4 complete — send.ts, full-width template with city images, city-images.json; next: plan Phase 5 (scheduling & automation)
+Last session: 2026-02-26
+Stopped at: Phase 5 Plan 01 complete — weekly-pipeline.yml and keepalive.yml created; next: 05-02
 Resume file: None
