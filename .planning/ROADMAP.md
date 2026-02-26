@@ -91,11 +91,11 @@ Plans:
   2. If the cron fires more than once in a week, the second run detects the week_key in send_log and exits without re-sending
   3. A Healthchecks.io dead man's switch receives a ping on every successful run, and the operator receives an alert if no ping arrives within the expected window
   4. Setting a kill-switch config flag prevents the next automated send without modifying the cron schedule or any source code
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 05-01: Configure GitHub Actions cron workflow (Thursday 08:00 CET, timezone-aware, environment secrets)
-- [ ] 05-02: Implement Send Log writes, idempotency gate (week_key check), Healthchecks.io ping, operator alert on exception, and kill-switch flag
+- [ ] 05-01-PLAN.md — Create GitHub Actions workflow files (weekly-pipeline.yml with dual DST cron, kill-switch, HC pings + keepalive.yml)
+- [ ] 05-02-PLAN.md — Operator runbook (OPERATIONS.md) and end-to-end verification via manual workflow_dispatch
 
 ## Progress
 
