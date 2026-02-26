@@ -1,8 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { Resend } from 'resend'
 import { supabase } from '@/lib/db'
-
-const resend = new Resend(process.env.RESEND_API_KEY)
+import { getResend } from '@/lib/resend'
 
 export async function POST(req: NextRequest) {
   // CRITICAL: req.text() MUST be first body read.
@@ -12,7 +10,7 @@ export async function POST(req: NextRequest) {
 
   let event
   try {
-    event = resend.webhooks.verify({
+    event = getResend().webhooks.verify({
       payload,
       headers: {
         id: req.headers.get('svix-id') ?? '',

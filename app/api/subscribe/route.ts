@@ -1,9 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { Resend } from 'resend'
 import { supabase } from '@/lib/db'
+import { getResend } from '@/lib/resend'
 import { z } from 'zod'
-
-const resend = new Resend(process.env.RESEND_API_KEY)
 
 const BodySchema = z.object({
   email: z.string().email('Please enter a valid email address'),
@@ -53,7 +51,7 @@ export async function POST(req: NextRequest) {
         if (existing.status === 'pending') {
           // Re-send the confirmation email idempotently
           const confirmUrl = `${process.env.NEXT_PUBLIC_APP_URL}/api/confirm?token=${existing.unsubscribe_token}`
-          await resend.emails.send({
+          await getResend().emails.send({
             from: process.env.RESEND_FROM!,
             to: email,
             subject: 'Confirm your subscription to Weekend Getaways',
@@ -82,7 +80,7 @@ export async function POST(req: NextRequest) {
         }
 
         const confirmUrl = `${process.env.NEXT_PUBLIC_APP_URL}/api/confirm?token=${existing.unsubscribe_token}`
-        await resend.emails.send({
+        await getResend().emails.send({
           from: process.env.RESEND_FROM!,
           to: email,
           subject: 'Confirm your subscription to Weekend Getaways',
@@ -105,7 +103,7 @@ export async function POST(req: NextRequest) {
 
     // New subscriber inserted — send confirmation email
     const confirmUrl = `${process.env.NEXT_PUBLIC_APP_URL}/api/confirm?token=${subscriber.unsubscribe_token}`
-    await resend.emails.send({
+    await getResend().emails.send({
       from: process.env.RESEND_FROM!,
       to: email,
       subject: 'Confirm your subscription to Weekend Getaways',
