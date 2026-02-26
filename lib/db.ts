@@ -1,14 +1,26 @@
 import { createClient } from '@supabase/supabase-js'
 
-const supabaseUrl = process.env.SUPABASE_URL
-const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY
+type Client = ReturnType<typeof createClient>
 
-if (!supabaseUrl) throw new Error('Missing env var: SUPABASE_URL')
-if (!supabaseServiceRoleKey) throw new Error('Missing env var: SUPABASE_SERVICE_ROLE_KEY')
+let _client: Client | undefined
 
-export const supabase = createClient(supabaseUrl, supabaseServiceRoleKey, {
-  auth: {
-    persistSession: false,
-    autoRefreshToken: false,
+function getClient(): Client {
+  if (!_client) {
+    const url = process.env.SUPABASE_URL
+    const key = process.env.SUPABASE_SERVICE_ROLE_KEY
+    if (!url) throw new Error('Missing env var: SUPABASE_URL')
+    if (!key) throw new Error('Missing env var: SUPABASE_SERVICE_ROLE_KEY')
+    _client = createClient(url, key, {
+      auth: { persistSession: false, autoRefreshToken: false },
+    })
+  }
+  return _client
+}
+
+// Lazy proxy — client is created on first use, not at module load time.
+// This prevents Next.js build from throwing during static analysis.
+export const supabase = new Proxy({} as Client, {
+  get(_, prop: string | symbol) {
+    return (getClient() as Record<string | symbol, unknown>)[prop]
   },
 })
