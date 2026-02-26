@@ -5,14 +5,14 @@
 See: .planning/PROJECT.md (updated 2026-02-19)
 
 **Core value:** Find and deliver the cheapest weekend flights from Zagreb so budget-conscious travelers can make spontaneous decisions without doing the research themselves.
-**Current focus:** All phases complete — pending Kiwi API key for live pipeline run
+**Current focus:** Project complete and live
 
 ## Current Position
 
-Phase: 5 of 5 complete (with one deferred item)
+Phase: 5 of 5 complete
 Plan: 05-02 complete
-Status: ✅ All phases complete
-Last activity: 2026-02-26 — Vercel deployed, Tests 3 & 4 verified, keepalive fixed, Phase 5 done
+Status: ✅ All phases complete — pipeline live and fully verified
+Last activity: 2026-02-26 — All 4 pipeline tests passed (manual trigger, idempotency, kill-switch, keepalive)
 
 Progress: [██████████] 100%
 
@@ -77,19 +77,19 @@ Progress: [██████████] 100%
 - [Phase 5 Plan 01]: gautamkrishnar/keepalive-workflow@v2 blocked by GitHub Actions policy — replaced with inline empty-commit approach using only actions/checkout@v4; requires contents: write permission
 - [Phase 5 Plan 02]: Vercel was missing app/layout.tsx, globals.css, postcss.config.js — files were never committed; also postcss.config.mjs (ESM) replaced with postcss.config.js (CJS) for Turbopack compatibility
 
-### Pending Todos
+### Pending Todos (pre-public-launch)
 
-- **KIWI_API_KEY**: Obtain from Kiwi Tequila (tequila.kiwi.com) → add as GitHub Secret → run Tests 1 & 2 (manual trigger + idempotency)
-- DNS: SPF/DKIM/DMARC still needed on a real sending domain before launch (01-02 deferred)
+- DNS: SPF/DKIM/DMARC needed on a real sending domain before going public (01-02 deferred)
 - Privacy policy draft needed before subscriber #1
 - RESEND_WEBHOOK_SECRET: add to .env.local and Vercel after creating webhook in Resend dashboard
+- Switch Amadeus from test (test.api.amadeus.com) to production (api.amadeus.com) before public launch
 
 ### Blockers/Concerns
 
-- [Phase 3]: Kiwi Tequila API key not yet obtained — pipeline fetch step will fail until resolved
+- None — pipeline is fully operational on Amadeus test environment
 
 ## Session Continuity
 
 Last session: 2026-02-26
-Stopped at: All 5 phases complete. Vercel live. Kill-switch and keepalive verified. Blocked on KIWI_API_KEY for first live pipeline run.
+Stopped at: Project complete. All tests passed. Pipeline runs weekly on Thursday via GitHub Actions cron.
 Resume file: None
