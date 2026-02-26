@@ -1,10 +1,8 @@
-import { createClient } from '@supabase/supabase-js'
+import { createClient, SupabaseClient } from '@supabase/supabase-js'
 
-type Client = ReturnType<typeof createClient>
+let _client: SupabaseClient | undefined
 
-let _client: Client | undefined
-
-function getClient(): Client {
+function getClient(): SupabaseClient {
   if (!_client) {
     const url = process.env.SUPABASE_URL
     const key = process.env.SUPABASE_SERVICE_ROLE_KEY
@@ -19,8 +17,8 @@ function getClient(): Client {
 
 // Lazy proxy — client is created on first use, not at module load time.
 // This prevents Next.js build from throwing during static analysis.
-export const supabase = new Proxy({} as Client, {
+export const supabase = new Proxy({} as SupabaseClient, {
   get(_, prop: string | symbol) {
-    return (getClient() as Record<string | symbol, unknown>)[prop]
+    return (getClient() as unknown as Record<string | symbol, unknown>)[prop]
   },
 })
