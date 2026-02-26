@@ -38,10 +38,10 @@ const { enrichWithHotelEstimate } =
 /* eslint-enable @typescript-eslint/no-require-imports */
 
 async function main() {
-  const apiKey = process.env.KIWI_API_KEY
-  if (!apiKey) {
-    throw new Error('KIWI_API_KEY is not set — add it to .env.local')
-  }
+  const clientId = process.env.AMADEUS_CLIENT_ID
+  const clientSecret = process.env.AMADEUS_CLIENT_SECRET
+  if (!clientId) throw new Error('AMADEUS_CLIENT_ID is not set — add it to .env.local')
+  if (!clientSecret) throw new Error('AMADEUS_CLIENT_SECRET is not set — add it to .env.local')
 
   const key = weekKey()
   console.log(`Pipeline running for week: ${key}`)
@@ -53,7 +53,7 @@ async function main() {
   }
 
   // ── Fetch ────────────────────────────────────────────────────────────────
-  const flights = await fetchWeekendFlights(apiKey)
+  const flights = await fetchWeekendFlights(clientId, clientSecret)
 
   // ── Zero-results fallback (PIPE-04) ─────────────────────────────────────
   if (flights.length === 0) {

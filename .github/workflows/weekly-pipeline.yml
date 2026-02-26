@@ -31,7 +31,8 @@ jobs:
       - name: Fetch and cache deals (index.ts)
         run: npx ts-node --project pipeline/tsconfig.json pipeline/index.ts
         env:
-          KIWI_API_KEY: ${{ secrets.KIWI_API_KEY }}
+          AMADEUS_CLIENT_ID: ${{ secrets.AMADEUS_CLIENT_ID }}
+          AMADEUS_CLIENT_SECRET: ${{ secrets.AMADEUS_CLIENT_SECRET }}
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
 
