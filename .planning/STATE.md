@@ -12,7 +12,7 @@ See: .planning/PROJECT.md (updated 2026-02-19)
 Phase: 5 of 5 complete
 Plan: 05-02 complete
 Status: ✅ All phases complete — pipeline live and fully verified
-Last activity: 2026-02-26 — All 4 pipeline tests passed (manual trigger, idempotency, kill-switch, keepalive)
+Last activity: 2026-02-27 — Domain flajko.com live, Resend verified, emails now sent from hello@flajko.com
 
 Progress: [██████████] 100%
 
@@ -79,10 +79,11 @@ Progress: [██████████] 100%
 
 ### Pending Todos (pre-public-launch)
 
-- DNS: SPF/DKIM/DMARC needed on a real sending domain before going public (01-02 deferred)
-- Privacy policy draft needed before subscriber #1
-- RESEND_WEBHOOK_SECRET: add to .env.local and Vercel after creating webhook in Resend dashboard
-- Switch Amadeus from test (test.api.amadeus.com) to production (api.amadeus.com) before public launch
+- ✅ DNS: SPF/DKIM/DMARC configured on flajko.com via Resend (verified 2026-02-27)
+- ✅ Privacy policy live at https://flajko.com/privacy
+- ✅ RESEND_WEBHOOK_SECRET: configured in Resend dashboard, Vercel env vars, and .env.local
+- ✅ Domain: flajko.com live, Cloudflare DNS, sending from hello@flajko.com
+- Switch Amadeus from test to production (api.amadeus.com) when going public — decided to stay on test for now (learning project, ~$0.05/mo when ready)
 
 ### Blockers/Concerns
 
@@ -90,6 +91,6 @@ Progress: [██████████] 100%
 
 ## Session Continuity
 
-Last session: 2026-02-26
-Stopped at: Project complete. All tests passed. Pipeline runs weekly on Thursday via GitHub Actions cron.
+Last session: 2026-02-27
+Stopped at: Domain fully live. flajko.com connected to Vercel, Resend verified, sending from hello@flajko.com. All pre-launch todos complete.
 Resume file: None

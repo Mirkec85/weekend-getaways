@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import Image from 'next/image'
 
 export default function Home() {
   const [email, setEmail] = useState('')
@@ -45,12 +46,8 @@ export default function Home() {
     <div className="min-h-screen bg-white flex items-center justify-center px-4 py-16">
       <main className="w-full max-w-xl">
         <div className="mb-10">
-          <div className="flex items-center gap-2 mb-6">
-            <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-              <path d="M2 16L30 4L22 28L16 18L2 16Z" fill="#18181b" />
-              <path d="M16 18L20 14" stroke="white" strokeWidth="1.5" strokeLinecap="round"/>
-            </svg>
-            <span className="text-2xl font-bold tracking-tight text-zinc-900">flajko</span>
+          <div className="mb-6">
+            <Image src="/logo.svg" alt="Flajko" width={137} height={40} priority />
           </div>
           <h1 className="text-4xl font-bold tracking-tight text-zinc-900 mb-4">
             Cheapest Weekend Flights from Zagreb
