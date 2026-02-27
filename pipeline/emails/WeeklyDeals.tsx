@@ -82,7 +82,7 @@ export default function WeeklyDeals({
           {/* Header */}
           <Section>
             <Heading as="h1" style={h1Style}>
-              Weekend Getaways ✈️
+              Flajko ✈️
             </Heading>
             <Text style={subheadStyle}>{weekLabel}</Text>
           </Section>
@@ -119,7 +119,7 @@ export default function WeeklyDeals({
           {/* Footer */}
           <Hr style={hrStyle} />
           <Text style={footerStyle}>
-            You&apos;re receiving this because you subscribed to Weekend Getaways.
+            You&apos;re receiving this because you subscribed to Flajko.
           </Text>
           {unsubscribeUrl ? (
             <Link href={unsubscribeUrl} style={unsubscribeStyle}>

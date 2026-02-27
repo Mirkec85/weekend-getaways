@@ -12,7 +12,7 @@ export default function PrivacyPolicy() {
           <section>
             <h2 className="text-lg font-semibold text-zinc-900 mb-2">Who we are</h2>
             <p>
-              Weekend Getaways is a free weekly newsletter that sends the cheapest weekend
+              Flajko is a free weekly newsletter that sends the cheapest weekend
               flight deals from Zagreb to subscribers who have opted in. This service is
               operated as a personal project.
             </p>

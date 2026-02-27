@@ -172,7 +172,7 @@ async function main() {
   // HTML/text are re-rendered per subscriber so each gets their personalised
   // unsubscribeUrl in the email footer.
   const BATCH_SIZE = 100
-  const subject = `Weekend deals - ${weekLabel}`
+  const subject = `Flajko — vikend letovi ${weekLabel}`
 
   for (let i = 0; i < pending.length; i += BATCH_SIZE) {
     const chunk = pending.slice(i, i + BATCH_SIZE)
@@ -185,7 +185,7 @@ async function main() {
       )
       const text = toPlainText(html)
       return {
-        from: `Weekend Getaways <${fromAddress}>`,
+        from: `Flajko <${fromAddress}>`,
         to: sub.email,
         subject,
         html,
