@@ -91,7 +91,8 @@ export default function Home() {
                 className="mt-0.5 h-4 w-4 rounded border-zinc-300 text-zinc-900 focus:ring-zinc-500"
               />
               <label htmlFor="gdpr_consent" className="text-sm text-zinc-600 leading-snug">
-                I agree to receive weekly flight deal emails. I can unsubscribe at any time.
+                I agree to receive weekly flight deal emails. I can unsubscribe at any time.{' '}
+                <a href="/privacy" className="underline hover:text-zinc-900 transition-colors">Privacy policy</a>.
               </label>
             </div>
 
