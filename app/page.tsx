@@ -43,78 +43,104 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen bg-white flex items-center justify-center px-4 py-16">
-      <main className="w-full max-w-xl">
-        <div className="mb-10">
-          <div className="mb-6">
-            <Image src="/logo.svg" alt="Flajko" width={137} height={40} priority />
-          </div>
-          <h1 className="text-4xl font-bold tracking-tight text-zinc-900 mb-4">
-            Cheapest Weekend Flights from Zagreb
-          </h1>
-          <p className="text-lg text-zinc-600 leading-relaxed">
-            Every Thursday, 3 budget destinations land in your inbox — hand-picked, genuinely cheap, ready to book.
-          </p>
+    <div className="relative min-h-screen flex flex-col">
+      {/* Background image */}
+      <div className="absolute inset-0 z-0">
+        <Image
+          src="https://images.unsplash.com/photo-1504723246034-0977641ea907?auto=format&fit=crop&w=1920&q=80"
+          alt="Airport tarmac"
+          fill
+          className="object-cover"
+          priority
+        />
+        <div className="absolute inset-0 bg-white/40" />
+      </div>
+
+      {/* Nav */}
+      <nav className="relative z-10 flex items-center justify-between px-6 py-4 border-b" style={{ borderColor: '#CECECE' }}>
+        <Image src="/logo.svg" alt="Flajko" width={110} height={32} priority />
+        <div className="flex items-center gap-3">
+          <button className="text-sm font-medium transition-colors px-2 py-1" style={{ color: '#0B0809' }}>
+            Log In
+          </button>
+          <button className="text-sm font-medium rounded-lg px-4 py-1.5 border transition-colors hover:text-white" style={{ color: '#0B0809', borderColor: '#3174E0' }} onMouseEnter={e => (e.currentTarget.style.backgroundColor = '#3174E0')} onMouseLeave={e => (e.currentTarget.style.backgroundColor = '')}>
+            Register
+          </button>
         </div>
+      </nav>
 
-        {status === 'success' ? (
-          <div className="rounded-lg bg-green-50 border border-green-200 px-6 py-5">
-            <p className="text-green-800 font-medium">
-              Check your email to confirm your subscription!
+      {/* Content */}
+      <main className="relative z-10 flex-1 flex items-center justify-center px-4 py-16">
+        <div className="w-full max-w-xl">
+          <div className="mb-10">
+            <h1 className="text-4xl font-bold tracking-tight text-zinc-900 mb-4">
+              Cheapest Weekend Flights from Zagreb
+            </h1>
+            <p className="text-lg text-zinc-600 leading-relaxed">
+              Every Thursday, 3 budget destinations land in your inbox — hand-picked, genuinely cheap, ready to book.
             </p>
           </div>
-        ) : status === 'already' ? (
-          <div className="rounded-lg bg-blue-50 border border-blue-200 px-6 py-5">
-            <p className="text-blue-800 font-medium">
-              You&apos;re already subscribed!
-            </p>
-          </div>
-        ) : (
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <label htmlFor="email" className="block text-sm font-medium text-zinc-700 mb-1">
-                Email address
-              </label>
-              <input
-                id="email"
-                type="email"
-                required
-                placeholder="your@email.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="w-full rounded-md border border-zinc-300 px-4 py-3 text-zinc-900 placeholder-zinc-400 focus:border-zinc-500 focus:outline-none focus:ring-2 focus:ring-zinc-500 focus:ring-offset-0"
-              />
-            </div>
 
-            <div className="flex items-start gap-3">
-              <input
-                id="gdpr_consent"
-                type="checkbox"
-                checked={gdprConsent}
-                onChange={(e) => setGdprConsent(e.target.checked)}
-                className="mt-0.5 h-4 w-4 rounded border-zinc-300 text-zinc-900 focus:ring-zinc-500"
-              />
-              <label htmlFor="gdpr_consent" className="text-sm text-zinc-600 leading-snug">
-                I agree to receive weekly flight deal emails. I can unsubscribe at any time.{' '}
-                <a href="/privacy" className="underline hover:text-zinc-900 transition-colors">Privacy policy</a>.
-              </label>
+          {status === 'success' ? (
+            <div className="rounded-lg bg-green-50 border border-green-200 px-6 py-5">
+              <p className="text-green-800 font-medium">
+                Check your email to confirm your subscription!
+              </p>
             </div>
-
-            {status === 'error' && (
-              <div className="rounded-md bg-red-50 border border-red-200 px-4 py-3">
-                <p className="text-sm text-red-700">{errorMessage}</p>
+          ) : status === 'already' ? (
+            <div className="rounded-lg bg-blue-50 border border-blue-200 px-6 py-5">
+              <p className="text-blue-800 font-medium">
+                You&apos;re already subscribed!
+              </p>
+            </div>
+          ) : (
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div>
+                <label htmlFor="email" className="sr-only">
+                  Email address
+                </label>
+                <div className="flex">
+                  <input
+                    id="email"
+                    type="email"
+                    required
+                    placeholder="your@email.com"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="flex-1 rounded-l-lg border border-zinc-300 px-4 py-3 text-zinc-900 placeholder-zinc-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-0"
+                  />
+                  <button
+                    type="submit"
+                    disabled={loading}
+                    className="rounded-r-lg bg-blue-600 px-6 py-3 text-white font-medium hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors whitespace-nowrap"
+                  >
+                    {loading ? 'Subscribing...' : 'Subscribe'}
+                  </button>
+                </div>
               </div>
-            )}
 
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full rounded-md bg-zinc-900 px-6 py-3 text-white font-medium hover:bg-zinc-700 focus:outline-none focus:ring-2 focus:ring-zinc-900 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-            >
-              {loading ? 'Subscribing...' : 'Subscribe'}
-            </button>
-          </form>
-        )}
+              <div className="flex items-start gap-3">
+                <input
+                  id="gdpr_consent"
+                  type="checkbox"
+                  checked={gdprConsent}
+                  onChange={(e) => setGdprConsent(e.target.checked)}
+                  className="mt-0.5 h-4 w-4 rounded border-zinc-300 text-blue-600 focus:ring-blue-500"
+                />
+                <label htmlFor="gdpr_consent" className="text-sm text-zinc-600 leading-snug">
+                  I agree to receive weekly flight deal emails. I can unsubscribe at any time.{' '}
+                  <a href="/privacy" className="underline hover:text-zinc-900 transition-colors">Privacy policy</a>.
+                </label>
+              </div>
+
+              {status === 'error' && (
+                <div className="rounded-md bg-red-50 border border-red-200 px-4 py-3">
+                  <p className="text-sm text-red-700">{errorMessage}</p>
+                </div>
+              )}
+            </form>
+          )}
+        </div>
       </main>
     </div>
   )
