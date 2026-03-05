@@ -60,10 +60,10 @@ export default function Home() {
       <nav className="relative z-10 flex items-center justify-between px-[80px] py-4 border-b" style={{ borderColor: '#CECECE' }}>
         <Image src="/logo.svg" alt="Flajko" width={110} height={32} priority />
         <div className="flex items-center gap-3">
-          <button className="text-sm font-medium transition-colors px-2 py-1" style={{ color: '#0B0809' }}>
+          <button className="text-sm font-medium transition-colors px-2 py-1" style={{ color: '#0B0809' }} onMouseEnter={e => { e.currentTarget.style.color = '#155dfc'; }} onMouseLeave={e => { e.currentTarget.style.color = '#0B0809'; }}>
             Log In
           </button>
-          <button className="text-sm font-medium rounded-lg px-4 py-1.5 border transition-colors hover:text-white" style={{ color: '#0B0809', borderColor: '#3174E0' }} onMouseEnter={e => (e.currentTarget.style.backgroundColor = '#3174E0')} onMouseLeave={e => (e.currentTarget.style.backgroundColor = '')}>
+          <button className="text-sm font-medium rounded-lg px-4 py-1.5 border transition-colors hover:text-white" style={{ color: '#0B0809', borderColor: '#3174E0' }} onMouseEnter={e => { e.currentTarget.style.backgroundColor = '#3174E0'; e.currentTarget.style.color = 'white'; }} onMouseLeave={e => { e.currentTarget.style.backgroundColor = ''; e.currentTarget.style.color = '#0B0809'; }}>
             Register
           </button>
         </div>
@@ -107,7 +107,7 @@ export default function Home() {
                     placeholder="your@email.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="flex-1 rounded-l-lg border border-zinc-300 px-4 py-3 text-zinc-900 placeholder-zinc-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-0"
+                    className="flex-1 rounded-l-lg border px-4 py-3 text-zinc-900 placeholder-[#71717A] focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-0" style={{ borderColor: '#949494' }}
                   />
                   <button
                     type="submit"
@@ -125,11 +125,11 @@ export default function Home() {
                   type="checkbox"
                   checked={gdprConsent}
                   onChange={(e) => setGdprConsent(e.target.checked)}
-                  className="mt-0.5 h-4 w-4 rounded border-zinc-300 text-blue-600 focus:ring-blue-500"
+                  className="mt-0.5 h-4 w-4 rounded border-zinc-300 text-blue-600 focus:ring-blue-500 bg-transparent"
                 />
                 <label htmlFor="gdpr_consent" className="text-sm text-zinc-600 leading-snug">
                   I agree to receive weekly flight deal emails. I can unsubscribe at any time.{' '}
-                  <a href="/privacy" className="underline hover:text-zinc-900 transition-colors">Privacy policy</a>.
+                  <a href="/privacy" target="_blank" rel="noopener noreferrer" className="underline hover:text-zinc-900 transition-colors">Privacy policy</a>.
                 </label>
               </div>
 
