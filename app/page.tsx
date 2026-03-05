@@ -47,7 +47,7 @@ export default function Home() {
       {/* Background image */}
       <div className="absolute inset-0 z-0">
         <Image
-          src="https://images.unsplash.com/photo-1504723246034-0977641ea907?auto=format&fit=crop&w=1920&q=80"
+          src="/bg-plane.jpg.jpg"
           alt="Airport tarmac"
           fill
           className="object-cover"
@@ -57,7 +57,7 @@ export default function Home() {
       </div>
 
       {/* Nav */}
-      <nav className="relative z-10 flex items-center justify-between px-6 py-4 border-b" style={{ borderColor: '#CECECE' }}>
+      <nav className="relative z-10 flex items-center justify-between px-[80px] py-4 border-b" style={{ borderColor: '#CECECE' }}>
         <Image src="/logo.svg" alt="Flajko" width={110} height={32} priority />
         <div className="flex items-center gap-3">
           <button className="text-sm font-medium transition-colors px-2 py-1" style={{ color: '#0B0809' }}>
@@ -70,14 +70,14 @@ export default function Home() {
       </nav>
 
       {/* Content */}
-      <main className="relative z-10 flex-1 flex items-center justify-center px-4 py-16">
-        <div className="w-full max-w-xl">
-          <div className="mb-10">
-            <h1 className="text-4xl font-bold tracking-tight text-zinc-900 mb-4">
+      <main className="relative z-10 flex-1 flex items-start justify-center px-[80px] pt-[100px]">
+        <div className="w-full max-w-[600px]">
+          <div className="mb-[16px]">
+            <h1 className="text-[48px] leading-[110%] tracking-[0] font-bold text-zinc-900 mb-4 text-center">
               Cheapest Weekend Flights from Zagreb
             </h1>
-            <p className="text-lg text-zinc-600 leading-relaxed">
-              Every Thursday, 3 budget destinations land in your inbox — hand-picked, genuinely cheap, ready to book.
+            <p className="text-lg text-zinc-600 leading-relaxed text-center">
+              Every Thursday, 3 budget destinations land in your inbox.<br />Hand-picked, genuinely cheap, ready to book.
             </p>
           </div>
 
