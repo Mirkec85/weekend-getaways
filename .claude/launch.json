@@ -1,0 +1,17 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "Next.js",
+      "runtimeExecutable": "cmd",
+      "runtimeArgs": ["/c", "node", "./node_modules/next/dist/bin/next", "dev", "--port", "3002"],
+      "port": 3002
+    },
+    {
+      "name": "React Email Preview",
+      "runtimeExecutable": "cmd",
+      "runtimeArgs": ["/c", "npx", "email", "dev", "--port", "3003"],
+      "port": 3003
+    }
+  ]
+}

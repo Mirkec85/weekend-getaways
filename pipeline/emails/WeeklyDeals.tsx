@@ -9,8 +9,6 @@ import {
   Column,
   Img,
   Text,
-  Heading,
-  Hr,
   Link,
 } from '@react-email/components'
 import * as React from 'react'
@@ -20,112 +18,198 @@ import * as React from 'react'
 export interface DealCard {
   destinationName: string
   flightPriceEur: number
-  departLabel: string       // e.g. "Fri 21 Feb"
-  returnLabel: string       // e.g. "Sun 23 Feb"
-  blurb: string             // from blurbs.json
-  hotelEstimateEur: number  // from hotel-estimates or default 80
-  observedLabel: string     // e.g. "Thu 19 Feb 08:12 CET"
-  bookingUrl: string        // already has UTM params appended
-  imageUrl?: string         // optional city photo URL
+  departLabel: string       // e.g. "Fri 21 Mar"
+  returnLabel: string       // e.g. "Sun 23 Mar"
+  blurb: string
+  hotelEstimateEur: number
+  observedLabel: string     // e.g. "Thu 19 Mar 08:12 CET"
+  bookingUrl: string
+  imageUrl?: string
 }
 
 export interface WeeklyDealsProps {
   deals: DealCard[]
-  weekLabel: string         // e.g. "Weekend of 21-23 Feb 2026"
-  unsubscribeUrl?: string   // footer link
+  weekLabel: string
+  unsubscribeUrl?: string
+  logoUrl?: string
 }
 
-// ── Sub-component ─────────────────────────────────────────────────────────────
+// ── Deal card ────────────────────────────────────────────────────────────────
 
-function DealCardText({ deal }: { deal: DealCard }) {
+function DealCardRow({ deal }: { deal: DealCard }) {
+  const imgSrc = deal.imageUrl ?? 'https://placehold.co/360/240'
+
   return (
-    <>
-      <Heading as="h2" style={h2Style}>
-        {deal.destinationName}
-      </Heading>
-      <Text style={priceStyle}>
-        Flight from EUR {deal.flightPriceEur}
-      </Text>
-      <Text style={metaStyle}>
-        {deal.departLabel} {'->'} {deal.returnLabel}
-      </Text>
-      <Text style={blurbStyle}>{deal.blurb}</Text>
-      <Text style={metaStyle}>
-        Hotel est. ~EUR {deal.hotelEstimateEur}/night
-      </Text>
-      <Text style={observedStyle}>
-        Observed: {deal.observedLabel}
-      </Text>
-      <Link href={deal.bookingUrl} style={ctaStyle}>
-        Book now -&gt;
-      </Link>
-    </>
+    <Section style={dealCardStyle}>
+      <Row>
+        {/* Left / Top (mobile): city image */}
+        <Column
+          className="deal-img-col"
+          style={{ width: '187px', verticalAlign: 'top' }}
+        >
+          <Img
+            src={imgSrc}
+            width={187}
+            height={194}
+            alt={deal.destinationName}
+            className="deal-img"
+            style={dealImgStyle}
+          />
+        </Column>
+
+        {/* Right / Bottom (mobile): content */}
+        <Column
+          className="deal-content-col"
+          style={{ paddingLeft: '20px', verticalAlign: 'top' }}
+        >
+          {/* City name + price */}
+          <Section>
+            <Row>
+              <Column style={{ verticalAlign: 'top' }}>
+                <Text style={cityNameStyle}>{deal.destinationName}</Text>
+              </Column>
+              <Column style={{ textAlign: 'right', verticalAlign: 'top' }}>
+                <Text style={priceStyle}>from €{deal.flightPriceEur}</Text>
+              </Column>
+            </Row>
+          </Section>
+
+          {/* Blurb */}
+          <Text style={blurbStyle}>{deal.blurb}</Text>
+
+          {/* Meta rows */}
+          <Section style={{ paddingTop: '12px' }}>
+            <Row>
+              <Column>
+                <Text style={metaStyle}>✈ {deal.departLabel} → {deal.returnLabel}</Text>
+              </Column>
+            </Row>
+            <Row>
+              <Column>
+                <Text style={metaStyle}>🛏 Est. €{deal.hotelEstimateEur}/night</Text>
+              </Column>
+            </Row>
+            <Row>
+              <Column>
+                <Text style={metaStyle}>🕐 Observed: {deal.observedLabel}</Text>
+              </Column>
+            </Row>
+          </Section>
+
+          {/* Book Now */}
+          <Section style={{ marginTop: '16px' }}>
+            <Row>
+              <Column>
+                <Link href={deal.bookingUrl} style={bookBtnStyle}>
+                  Book Now →
+                </Link>
+              </Column>
+            </Row>
+          </Section>
+        </Column>
+      </Row>
+    </Section>
   )
 }
 
-// ── Component ────────────────────────────────────────────────────────────────
+// ── Email ────────────────────────────────────────────────────────────────────
 
 export default function WeeklyDeals({
   deals,
   weekLabel,
   unsubscribeUrl,
+  logoUrl,
 }: WeeklyDealsProps) {
   return (
     <Html>
-      <Head />
+      <Head>
+        <style>{`
+          @media only screen and (max-width: 600px) {
+            /* Header: stack logo above date */
+            td.hdr-logo-col,
+            td.hdr-date-col {
+              display: block !important;
+              width: 100% !important;
+            }
+            td.hdr-date-col p {
+              text-align: left !important;
+              padding-top: 4px !important;
+            }
+
+            /* Deal card: stack image on top, content below */
+            td.deal-img-col,
+            td.deal-content-col {
+              display: block !important;
+              width: 100% !important;
+            }
+            td.deal-content-col {
+              padding-left: 0 !important;
+              padding-top: 12px !important;
+            }
+            img.deal-img {
+              width: 100% !important;
+              height: 200px !important;
+              max-width: 100% !important;
+            }
+          }
+        `}</style>
+      </Head>
       <Preview>
-        {`Weekend deals from Zagreb - from EUR ${deals[0]?.flightPriceEur ?? ''}`}
+        {`Weekend deals · from €${deals[0]?.flightPriceEur ?? ''}`}
       </Preview>
       <Body style={bodyStyle}>
         <Container style={containerStyle}>
 
-          {/* Header */}
-          <Section>
-            <Heading as="h1" style={h1Style}>
-              Flajko ✈️
-            </Heading>
-            <Text style={subheadStyle}>{weekLabel}</Text>
+          {/* ── Header ── */}
+          <Section style={headerStyle}>
+            <Row>
+              <Column className="hdr-logo-col">
+                {logoUrl
+                  ? <Img src={logoUrl} width={100} height={30} alt="Flajko" style={{ display: 'block' }} />
+                  : <Text style={logoTextStyle}>Flajko ✈</Text>}
+              </Column>
+              <Column className="hdr-date-col" align="right">
+                <Text style={weekLabelStyle}>{weekLabel}</Text>
+              </Column>
+            </Row>
           </Section>
-          <Hr style={hrStyle} />
 
-          {/* Deal cards */}
-          {deals.map((deal, i) => (
-            <Section key={i} style={cardStyle}>
-              {deal.imageUrl ? (
-                <Row>
-                  <Column style={imageColStyle}>
-                    <Img
-                      src={deal.imageUrl}
-                      width={180}
-                      height={120}
-                      alt={deal.destinationName}
-                      style={imgStyle}
-                    />
-                  </Column>
-                  <Column style={textColStyle}>
-                    <DealCardText deal={deal} />
-                  </Column>
-                </Row>
-              ) : (
+          {/* ── Body card ── */}
+          <Section style={bodyCardStyle}>
+            <Row>
+              <Column>
+                <Text style={titleStyle}>Pick your flight and enjoy the trip!</Text>
+              </Column>
+            </Row>
+
+            {deals.map((deal, i) => (
+              <React.Fragment key={i}>
                 <Row>
                   <Column>
-                    <DealCardText deal={deal} />
+                    <DealCardRow deal={deal} />
                   </Column>
                 </Row>
-              )}
-            </Section>
-          ))}
+                {i < deals.length - 1
+                  ? <Row><Column style={spacerStyle}>&nbsp;</Column></Row>
+                  : null}
+              </React.Fragment>
+            ))}
+          </Section>
 
-          {/* Footer */}
-          <Hr style={hrStyle} />
-          <Text style={footerStyle}>
-            You&apos;re receiving this because you subscribed to Flajko.
-          </Text>
-          {unsubscribeUrl ? (
-            <Link href={unsubscribeUrl} style={unsubscribeStyle}>
-              Unsubscribe
-            </Link>
-          ) : null}
+          {/* ── Footer ── */}
+          <Section style={footerStyle}>
+            <Row>
+              <Column>
+                <Text style={footerTextStyle}>
+                  If you&apos;d rather not receive this kind of email, you can{' '}
+                  {unsubscribeUrl
+                    ? <Link href={unsubscribeUrl} style={unsubLinkStyle}>unsubscribe</Link>
+                    : 'unsubscribe'}{' '}
+                  anytime.
+                </Text>
+              </Column>
+            </Row>
+          </Section>
 
         </Container>
       </Body>
@@ -133,108 +217,136 @@ export default function WeeklyDeals({
   )
 }
 
-// ── Inline styles (no className — Gmail strips class-based CSS) ──────────────
+// ── Styles ───────────────────────────────────────────────────────────────────
 
 const bodyStyle: React.CSSProperties = {
-  backgroundColor: '#f6f9fc',
-  fontFamily: 'sans-serif',
+  backgroundColor: '#f3f4f6',
+  fontFamily: "'Inter', -apple-system, sans-serif",
+  margin: 0,
+  padding: 0,
 }
 
 const containerStyle: React.CSSProperties = {
+  maxWidth: '600px',
+  margin: '0 auto',
+}
+
+const headerStyle: React.CSSProperties = {
+  paddingLeft: '32px',
+  paddingRight: '32px',
+  paddingTop: '24px',
+  paddingBottom: '24px',
+}
+
+const logoTextStyle: React.CSSProperties = {
+  fontSize: '18px',
+  fontWeight: '700',
+  color: '#0284c7',
+  margin: 0,
+}
+
+const weekLabelStyle: React.CSSProperties = {
+  fontSize: '12px',
+  color: '#6b7280',
+  margin: 0,
+  lineHeight: '16px',
+  textAlign: 'right' as const,
+}
+
+const bodyCardStyle: React.CSSProperties = {
   backgroundColor: '#ffffff',
-  padding: '24px',
+  borderTopLeftRadius: '16px',
+  borderTopRightRadius: '16px',
+  padding: '32px',
 }
 
-const h1Style: React.CSSProperties = {
-  fontSize: '24px',
-  color: '#1a1a1a',
-  margin: '0 0 8px 0',
+const titleStyle: React.CSSProperties = {
+  fontSize: '20px',
+  fontWeight: '700',
+  color: '#333333',
+  margin: '0 0 24px 0',
+  lineHeight: '32px',
 }
 
-const subheadStyle: React.CSSProperties = {
-  fontSize: '14px',
-  color: '#666666',
-  margin: '0',
+const spacerStyle: React.CSSProperties = {
+  height: '24px',
+  fontSize: '0',
+  lineHeight: '0',
 }
 
-const hrStyle: React.CSSProperties = {
-  borderColor: '#e0e0e0',
-  margin: '24px 0',
+// Deal card
+const dealCardStyle: React.CSSProperties = {
+  border: '1px solid #d1d5db',
+  borderRadius: '16px',
+  padding: '17px',
+  backgroundColor: '#ffffff',
 }
 
-const cardStyle: React.CSSProperties = {
-  backgroundColor: '#f8f8f8',
-  padding: '16px',
+const dealImgStyle: React.CSSProperties = {
   borderRadius: '8px',
-  marginBottom: '24px',
-}
-
-const imageColStyle: React.CSSProperties = {
-  width: '180px',
-  verticalAlign: 'top',
-  paddingRight: '16px',
-}
-
-const imgStyle: React.CSSProperties = {
-  borderRadius: '6px',
   display: 'block',
   objectFit: 'cover',
 }
 
-const textColStyle: React.CSSProperties = {
-  verticalAlign: 'top',
-}
-
-const h2Style: React.CSSProperties = {
-  fontSize: '20px',
-  color: '#1a1a1a',
-  margin: '0 0 8px 0',
+const cityNameStyle: React.CSSProperties = {
+  fontSize: '16px',
+  fontWeight: '700',
+  color: '#1f2937',
+  margin: 0,
+  lineHeight: '24px',
 }
 
 const priceStyle: React.CSSProperties = {
-  fontSize: '24px',
-  fontWeight: 'bold',
-  color: '#0070f3',
-  margin: '0 0 8px 0',
-}
-
-const metaStyle: React.CSSProperties = {
-  fontSize: '14px',
-  color: '#444444',
-  margin: '0 0 4px 0',
+  fontSize: '18px',
+  fontWeight: '700',
+  color: '#0284c7',
+  margin: 0,
+  lineHeight: '28px',
+  textAlign: 'right' as const,
 }
 
 const blurbStyle: React.CSSProperties = {
-  fontSize: '14px',
-  color: '#333333',
-  margin: '8px 0',
-}
-
-const observedStyle: React.CSSProperties = {
   fontSize: '12px',
-  color: '#999999',
-  margin: '4px 0',
+  color: '#6b7280',
+  margin: '4px 0 0 0',
+  lineHeight: '16px',
 }
 
-const ctaStyle: React.CSSProperties = {
+const metaStyle: React.CSSProperties = {
+  fontSize: '12px',
+  color: '#6b7280',
+  margin: '0 0 8px 0',
+  lineHeight: '16px',
+}
+
+const bookBtnStyle: React.CSSProperties = {
   display: 'inline-block',
-  backgroundColor: '#0070f3',
+  backgroundColor: '#0284c7',
   color: '#ffffff',
-  padding: '12px 24px',
+  padding: '8px 12px',
   borderRadius: '6px',
   textDecoration: 'none',
-  fontWeight: 'bold',
+  fontSize: '12px',
+  fontWeight: '600',
+  lineHeight: '1.5',
 }
 
+// Footer
 const footerStyle: React.CSSProperties = {
-  fontSize: '12px',
-  color: '#999999',
-  textAlign: 'center' as const,
+  backgroundColor: '#ffffff',
+  borderBottomLeftRadius: '16px',
+  borderBottomRightRadius: '16px',
+  padding: '32px',
 }
 
-const unsubscribeStyle: React.CSSProperties = {
-  fontSize: '12px',
-  color: '#999999',
-  display: 'block',
-  textAlign: 'center' as const,
+const footerTextStyle: React.CSSProperties = {
+  fontSize: '14px',
+  color: '#6b7280',
+  lineHeight: '20px',
+  margin: 0,
+}
+
+const unsubLinkStyle: React.CSSProperties = {
+  color: '#0284c7',
+  textDecoration: 'underline',
 }
