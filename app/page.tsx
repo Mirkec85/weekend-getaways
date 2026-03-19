@@ -1,488 +1,484 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import Image from 'next/image'
+import { useState } from 'react'
+import Link from 'next/link'
 
+// ── Figma asset URLs (valid 7 days from extraction) ──────────────────────────
+const LOGO_NAV         = 'https://www.figma.com/api/mcp/asset/1f48afff-1c0c-4426-85d6-39ce9e27b65c'
+const LOGO_FOOTER      = 'https://www.figma.com/api/mcp/asset/620150d4-9035-4f15-8d26-150cded3cc0e'
+
+const HERO_1           = 'https://www.figma.com/api/mcp/asset/a1d55729-a427-4858-aff2-adc71af4acc9'
+const HERO_2           = 'https://www.figma.com/api/mcp/asset/761710ca-83e7-4e5a-8231-0521c0b8ebc8'
+const HERO_3           = 'https://www.figma.com/api/mcp/asset/a49b39d5-78f6-49e6-aa2c-a1be98b9d1d7'
+const HERO_4           = 'https://www.figma.com/api/mcp/asset/7078d1f1-e4fc-4fff-9324-737d83f77cda'
+
+const LOGO_KIWI        = 'https://www.figma.com/api/mcp/asset/0b120ba1-bf6e-45f0-8eac-d65e7b902ca4'
+const LOGO_LASTMINUTE  = 'https://www.figma.com/api/mcp/asset/683a753c-dbc0-42a0-b596-a0e7f7f29a6b'
+const LOGO_KAYAK       = 'https://www.figma.com/api/mcp/asset/6aaf0819-2ba4-4c66-be37-335c65db8847'
+const LOGO_GOOGLE      = 'https://www.figma.com/api/mcp/asset/06e32288-1a0c-4ac4-9dff-52dbd348f2bf'
+
+const VISUAL_FLOW      = 'https://www.figma.com/api/mcp/asset/ea6470a1-8ccb-4311-a804-dc0566f615c7'
+
+const ICON_AIRPLANE    = 'https://www.figma.com/api/mcp/asset/45d06eb5-cd54-4b7c-9be9-feb72431d06a'
+const ICON_BED         = 'https://www.figma.com/api/mcp/asset/87ec5208-845a-4175-8bb6-4c3e6518daa9'
+const ICON_CLOCK       = 'https://www.figma.com/api/mcp/asset/588f231c-a8bb-47d6-90a8-3fe54dcf94f3'
+const ICON_ARROW       = 'https://www.figma.com/api/mcp/asset/ccde18c5-3b77-42a7-bca1-610e464e2dea'
+const ICON_QUOTES      = 'https://www.figma.com/api/mcp/asset/ac82fac2-0f3a-4c4d-a360-91b39b0c32df'
+
+const AVATAR_1         = 'https://www.figma.com/api/mcp/asset/5aac638c-0598-488e-99cf-a5739c7043b4'
+const AVATAR_2         = 'https://www.figma.com/api/mcp/asset/feaa14ff-65ca-4445-bb8f-5d8620233b24'
+const AVATAR_3         = 'https://www.figma.com/api/mcp/asset/94bb5db3-95ca-428d-a3d1-2fc4c2e9c30e'
+
+// ── Data ─────────────────────────────────────────────────────────────────────
 const deals = [
-  { id: 1, destination: 'Rome', iata: 'FCO', country: 'Italy', price: 29, originalPrice: 89, departure: 'Fri, 21 Mar', return: 'Sun, 23 Mar', duration: '2h 10m', airline: 'Ryanair', tag: 'Best deal' },
-  { id: 2, destination: 'Vienna', iata: 'VIE', country: 'Austria', price: 19, originalPrice: 65, departure: 'Fri, 21 Mar', return: 'Sun, 23 Mar', duration: '1h 05m', airline: 'Wizz Air', tag: 'Nearby' },
-  { id: 3, destination: 'Barcelona', iata: 'BCN', country: 'Spain', price: 39, originalPrice: 120, departure: 'Fri, 28 Mar', return: 'Sun, 30 Mar', duration: '2h 30m', airline: 'Vueling', tag: 'Popular' },
-  { id: 4, destination: 'Amsterdam', iata: 'AMS', country: 'Netherlands', price: 45, originalPrice: 130, departure: 'Fri, 4 Apr', return: 'Sun, 6 Apr', duration: '2h 20m', airline: 'KLM', tag: '' },
-  { id: 5, destination: 'Paris', iata: 'CDG', country: 'France', price: 49, originalPrice: 150, departure: 'Fri, 4 Apr', return: 'Sun, 6 Apr', duration: '2h 15m', airline: 'Air France', tag: '' },
-  { id: 6, destination: 'Budapest', iata: 'BUD', country: 'Hungary', price: 15, originalPrice: 55, departure: 'Fri, 11 Apr', return: 'Sun, 13 Apr', duration: '0h 55m', airline: 'Wizz Air', tag: 'Flash deal' },
+  {
+    city: 'Rome',
+    price: 'from €89',
+    blurb: "Ancient ruins, Renaissance art, and the world's best pasta just steps from every corner.",
+    dates: 'Fri, 21 Mar → Sun, 23 Mar',
+    hotel: 'Est. €110/night',
+    observed: 'Observed: Thu 19 Mar 07:42 CET',
+    image: 'https://www.figma.com/api/mcp/asset/9f24e73b-b37c-401c-86d0-1e95004f2e85',
+  },
+  {
+    city: 'Vienna',
+    price: 'from €112',
+    blurb: 'Imperial palaces, classical music, and café culture with elegant streets at every turn.',
+    dates: 'Fri, 21 Mar → Sun, 23 Mar',
+    hotel: 'Est. €110/night',
+    observed: 'Observed: Thu 19 Mar 07:42 CET',
+    image: 'https://www.figma.com/api/mcp/asset/04af820c-4f4b-485e-946d-484ff4479e9c',
+  },
+  {
+    city: 'Amsterdam',
+    price: 'from €118',
+    blurb: 'Canal-lined streets, nice museums, and vibrant neighborhoods connected by bike and water.',
+    dates: 'Fri, 21 Mar → Sun, 23 Mar',
+    hotel: 'Est. €110/night',
+    observed: 'Observed: Thu 19 Mar 07:42 CET',
+    image: 'https://www.figma.com/api/mcp/asset/db388b54-dabe-4c5d-b8c2-182996ba03d0',
+  },
+  {
+    city: 'Paris',
+    price: 'from €172',
+    blurb: 'From the Eiffel Tower to hidden cafés, beauty and culture everywhere you look.',
+    dates: 'Fri, 21 Mar → Sun, 23 Mar',
+    hotel: 'Est. €110/night',
+    observed: 'Observed: Thu 19 Mar 07:42 CET',
+    image: 'https://www.figma.com/api/mcp/asset/c447543e-ebb0-4455-8e3b-db2059b8a8ea',
+  },
 ]
 
-const testimonials = [
+const reviews = [
   {
+    text: "I booked a weekend in Rome for €29 last month. I had no idea prices like that existed. Flajko found it before I even thought to look.",
     name: 'Maja Kovač',
     role: 'Travel blogger',
-    avatar: 'MK',
-    quote: 'I booked a weekend in Rome for €29 last month. I had no idea prices like that existed. Flajko found it before I even thought to look.',
+    avatar: AVATAR_1,
   },
   {
+    text: 'Week 3, I got Budapest for €15 return. Booked it in 5 minutes. Now I open Flajko emails before I even have my morning coffee.',
     name: 'Tomislav Babić',
-    role: 'Software engineer',
-    avatar: 'TB',
-    quote: 'Week 3, I got Budapest for €15 return. Booked it in 5 minutes. Now I open Flajko emails before I even have my morning coffee.',
+    role: 'Student',
+    avatar: AVATAR_2,
   },
   {
+    text: 'Finally a newsletter that respects my time. Three deals. Every Thursday. No ads, no filler. Just flights I can actually afford.',
     name: 'Ana Perić',
-    role: 'UX Designer',
-    avatar: 'AP',
-    quote: 'Finally a newsletter that respects my time. Three deals. Every Thursday. No ads, no filler. Just flights I can actually afford.',
+    role: 'Software engineer',
+    avatar: AVATAR_3,
   },
 ]
 
 const steps = [
   {
-    number: '01',
-    title: 'Subscribe',
-    description: 'Enter your email. No account, no credit card, no setup required.',
+    n: '1',
+    title: 'Subscribe to Get Started',
+    desc: 'Enter your email to get started. No account, no credit card, and no setup required.',
   },
   {
-    number: '02',
-    title: 'Get your deals',
-    description: 'Every Thursday morning, 3 hand-picked weekend flights from Zagreb land in your inbox.',
+    n: '2',
+    title: 'Get Your Deals',
+    desc: 'Every Thursday morning, 3 hand-picked weekend flights from Zagreb land in your inbox.',
   },
   {
-    number: '03',
-    title: 'Book & fly',
-    description: 'Click through to book directly with the airline. We never mark up prices — what you see is what you pay.',
+    n: '3',
+    title: 'Book & Fly',
+    desc: 'Click through to book directly with the airline. We never mark up prices. What you see is what you pay.',
   },
 ]
 
-function SubscribeForm({
-  email,
-  setEmail,
-  gdprConsent,
-  setGdprConsent,
-  loading,
-  status,
-  errorMessage,
-  onSubmit,
-  dark = false,
-}: {
-  email: string
-  setEmail: (v: string) => void
-  gdprConsent: boolean
-  setGdprConsent: (v: boolean) => void
-  loading: boolean
-  status: string
-  errorMessage: string
-  onSubmit: (e: React.FormEvent<HTMLFormElement>) => void
-  dark?: boolean
-}) {
-  if (status === 'success') {
-    return (
-      <div className="rounded-xl bg-green-50 border border-green-200 px-6 py-5 max-w-md">
-        <p className="text-green-800 font-medium">✓ Check your email to confirm your subscription!</p>
-      </div>
-    )
-  }
-  if (status === 'already') {
-    return (
-      <div className="rounded-xl bg-blue-50 border border-blue-200 px-6 py-5 max-w-md">
-        <p className="text-blue-800 font-medium">You&apos;re already subscribed!</p>
-      </div>
-    )
+// ── Shared subscribe form ─────────────────────────────────────────────────────
+function SubscribeForm({ dark = false, centered = false }: { dark?: boolean; centered?: boolean }) {
+  const [email, setEmail] = useState('')
+  const [agreed, setAgreed] = useState(false)
+
+  function handleSubmit(e: React.FormEvent) {
+    e.preventDefault()
+    console.log('Subscribe submitted:', { email, agreed })
   }
 
   return (
-    <form onSubmit={onSubmit} className="space-y-3 max-w-md w-full">
-      <div className="flex">
+    <form onSubmit={handleSubmit} className={`flex flex-col gap-4 w-full ${centered ? 'items-center' : 'items-start'}`}>
+      {/* Input + Button row */}
+      <div className="flex flex-col sm:flex-row gap-2 w-full">
         <input
           type="email"
-          required
-          placeholder="your@email.com"
           value={email}
-          onChange={e => setEmail(e.target.value)}
-          className={`flex-1 rounded-l-xl border px-4 py-3.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#3174E0]/30 ${
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="your@email.com"
+          required
+          className={[
+            'h-10 px-4 text-sm rounded-lg border outline-none transition-colors',
+            'shadow-[0px_1px_2px_0px_rgba(0,0,0,0.05)]',
+            'w-full sm:w-[400px] shrink-0',
             dark
-              ? 'bg-[#1A1A1A] border-[#333] text-white placeholder-[#555] focus:border-[#3174E0]'
-              : 'bg-white border-[#949494] text-[#0B0809] placeholder-[#71717A] focus:border-[#3174E0]'
-          }`}
+              ? 'bg-transparent border-[#d1d5db] text-white placeholder-[#9ca3af] focus:border-[#0284c7]'
+              : 'bg-white border-[#d1d5db] text-[#111827] placeholder-[#9ca3af] focus:border-[#0284c7]',
+          ].join(' ')}
         />
         <button
           type="submit"
-          disabled={loading}
-          className="rounded-r-xl bg-[#3174E0] px-6 py-3.5 text-white text-sm font-semibold hover:bg-[#2563c8] focus:outline-none focus:ring-2 focus:ring-[#3174E0] focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors whitespace-nowrap"
+          className="h-10 px-5 bg-[#0284c7] text-white text-sm font-semibold rounded-md whitespace-nowrap hover:bg-[#0369a1] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0284c7] active:scale-[0.98]"
         >
-          {loading ? 'Subscribing…' : 'Subscribe free'}
+          Subscribe
         </button>
       </div>
 
-      <div className="flex items-start gap-2.5">
+      {/* Checkbox + privacy */}
+      <label className={`flex items-center gap-2 text-xs cursor-pointer ${centered ? 'justify-center' : ''}`}>
         <input
-          id={dark ? 'gdpr_dark' : 'gdpr_light'}
           type="checkbox"
-          checked={gdprConsent}
-          onChange={e => setGdprConsent(e.target.checked)}
-          className="mt-0.5 h-4 w-4 rounded border-zinc-300 text-[#3174E0] focus:ring-[#3174E0] bg-transparent"
+          checked={agreed}
+          onChange={(e) => setAgreed(e.target.checked)}
+          className="w-4 h-4 rounded-[4px] border border-[#9ca3af] accent-[#0284c7] cursor-pointer shrink-0"
         />
-        <label
-          htmlFor={dark ? 'gdpr_dark' : 'gdpr_light'}
-          className={`text-xs leading-snug ${dark ? 'text-[#666]' : 'text-[#71717A]'}`}
-        >
+        <span className={dark ? 'text-[#9ca3af]' : 'text-[#6b7280]'}>
           I agree to receive weekly flight deal emails. I can unsubscribe at any time.{' '}
-          <a href="/privacy" target="_blank" rel="noopener noreferrer" className="underline hover:text-[#0B0809] transition-colors">
-            Privacy policy
-          </a>.
-        </label>
-      </div>
-
-      {status === 'error' && (
-        <div className="rounded-lg bg-red-50 border border-red-200 px-4 py-3">
-          <p className="text-sm text-red-700">{errorMessage}</p>
-        </div>
-      )}
+          <Link href="/privacy" className="underline hover:text-[#0284c7] transition-colors">
+            Privacy policy.
+          </Link>
+        </span>
+      </label>
     </form>
   )
 }
 
-export default function Home() {
-  const [email, setEmail] = useState('')
-  const [gdprConsent, setGdprConsent] = useState(false)
-  const [loading, setLoading] = useState(false)
-  const [status, setStatus] = useState<'idle' | 'success' | 'already' | 'error'>('idle')
-  const [errorMessage, setErrorMessage] = useState('')
-  const [scrolled, setScrolled] = useState(false)
-
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 10)
-    window.addEventListener('scroll', onScroll)
-    return () => window.removeEventListener('scroll', onScroll)
-  }, [])
-
-  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault()
-    setLoading(true)
-    setStatus('idle')
-    setErrorMessage('')
-    try {
-      const res = await fetch('/api/subscribe', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, gdpr_consent: gdprConsent }),
-      })
-      if (res.status === 201) {
-        setStatus('success')
-        setEmail('')
-        setGdprConsent(false)
-      } else if (res.status === 409) {
-        setStatus('already')
-      } else {
-        const data = await res.json()
-        setStatus('error')
-        setErrorMessage(data.error || 'Something went wrong. Please try again.')
-      }
-    } catch {
-      setStatus('error')
-      setErrorMessage('Network error. Please check your connection and try again.')
-    } finally {
-      setLoading(false)
-    }
-  }
-
+// ── Page ──────────────────────────────────────────────────────────────────────
+export default function HomePage() {
   return (
-    <div className="min-h-screen bg-white text-[#0B0809]">
+    <div className="min-h-screen bg-white font-[Inter,sans-serif]">
 
-      {/* ── NAVBAR ── */}
-      <nav
-        className={`sticky top-0 z-50 transition-all duration-200 border-b ${
-          scrolled ? 'bg-white/95 backdrop-blur-sm shadow-sm border-[#ECECEC]' : 'bg-white border-[#ECECEC]'
-        }`}
-      >
-        <div className="max-w-7xl mx-auto px-6 md:px-10 flex items-center justify-between h-16">
-          <a href="#hero">
-            <Image src="/logo.svg" alt="Flajko" width={100} height={28} priority />
+      {/* ─── 1. NAV ─────────────────────────────────────────────────────────── */}
+      <nav className="sticky top-0 z-50 bg-white border-b border-[#e5e7eb] shadow-[0px_1px_2px_0px_rgba(0,0,0,0.05)]">
+        <div className="max-w-[1240px] mx-auto px-6 lg:px-0 h-16 flex items-center justify-between">
+          {/* Logo */}
+          <a href="#" className="shrink-0">
+            <img src={LOGO_NAV} alt="Flajko" width={100} height={30} className="block" />
           </a>
 
+          {/* Nav links — hidden on mobile */}
           <div className="hidden md:flex items-center gap-8">
-            <a href="#how-it-works" className="text-sm text-[#71717A] hover:text-[#0B0809] transition-colors">How it works</a>
-            <a href="#deals" className="text-sm text-[#71717A] hover:text-[#0B0809] transition-colors">Deals</a>
-            <a href="#testimonials" className="text-sm text-[#71717A] hover:text-[#0B0809] transition-colors">Reviews</a>
+            {[
+              { label: 'How it works', href: '#how-it-works' },
+              { label: 'Deals', href: '#deals' },
+              { label: 'Reviews', href: '#reviews' },
+            ].map(({ label, href }) => (
+              <a
+                key={label}
+                href={href}
+                className="text-sm font-normal text-[#6b7280] hover:text-[#0284c7] transition-colors"
+              >
+                {label}
+              </a>
+            ))}
           </div>
 
-          <div className="flex items-center gap-3">
-            <button
-              className="text-sm font-medium px-3 py-1.5 transition-colors"
-              style={{ color: '#0B0809' }}
-              onMouseEnter={e => { e.currentTarget.style.color = '#155dfc' }}
-              onMouseLeave={e => { e.currentTarget.style.color = '#0B0809' }}
-            >
+          {/* Buttons */}
+          <div className="flex items-center gap-2">
+            <button className="px-3 py-2 text-sm font-semibold text-[#1f2937] rounded-md hover:bg-[#f9fafb] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0284c7] active:scale-[0.98]">
               Log In
             </button>
-            <button
-              className="text-sm font-medium rounded-lg px-4 py-1.5 border transition-colors"
-              style={{ color: '#0B0809', borderColor: '#3174E0' }}
-              onMouseEnter={e => { e.currentTarget.style.backgroundColor = '#3174E0'; e.currentTarget.style.color = 'white' }}
-              onMouseLeave={e => { e.currentTarget.style.backgroundColor = ''; e.currentTarget.style.color = '#0B0809' }}
-            >
+            <button className="px-3 py-2 text-sm font-semibold text-[#1f2937] border border-[#0284c7] rounded-md hover:bg-[#f0f9ff] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0284c7] active:scale-[0.98]">
               Register
             </button>
           </div>
         </div>
       </nav>
 
-      {/* ── HERO ── */}
-      <section id="hero" className="relative overflow-hidden">
-        <div className="absolute inset-0 z-0">
-          <Image src="/bg-plane.jpg.jpg" alt="" fill className="object-cover" priority />
-          <div className="absolute inset-0 bg-white/65" />
-        </div>
-
-        <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-10 pt-20 pb-32">
-          <div className="max-w-2xl">
-            <span className="inline-flex items-center gap-1.5 text-xs font-semibold tracking-wide uppercase text-[#3174E0] bg-blue-50 border border-blue-100 rounded-full px-3 py-1 mb-6">
-              ✈ Every Thursday · Free newsletter
-            </span>
-
-            <h1 className="text-5xl md:text-6xl font-bold leading-[1.08] tracking-tight text-[#0B0809] mb-5">
-              Cheapest Weekend Flights from Zagreb
-            </h1>
-
-            <p className="text-lg text-[#52525B] leading-relaxed mb-8 max-w-lg">
-              Every Thursday, 3 budget destinations land in your inbox. Hand-picked, genuinely cheap, ready to book.
-            </p>
-
-            <SubscribeForm
-              email={email}
-              setEmail={setEmail}
-              gdprConsent={gdprConsent}
-              setGdprConsent={setGdprConsent}
-              loading={loading}
-              status={status}
-              errorMessage={errorMessage}
-              onSubmit={handleSubmit}
-            />
-
-            <p className="text-xs text-[#A1A1AA] mt-4">Free forever · No spam · Unsubscribe anytime</p>
-          </div>
-        </div>
-      </section>
-
-      {/* ── SOCIAL PROOF ── */}
-      <section className="bg-[#FAFAFA] border-y border-[#ECECEC] py-12">
-        <div className="max-w-7xl mx-auto px-6 md:px-10">
-          <p className="text-center text-xs font-semibold tracking-widest uppercase text-[#A1A1AA] mb-8">
-            Flight data powered by
-          </p>
-          <div className="flex flex-wrap items-center justify-center gap-10 md:gap-16">
-            <div className="flex items-center gap-2.5 opacity-60 hover:opacity-100 transition-opacity">
-              <div className="w-7 h-7 rounded-full bg-[#00B2A9] flex items-center justify-center">
-                <span className="text-white text-[11px] font-bold">K</span>
-              </div>
-              <span className="text-[#52525B] font-semibold text-sm tracking-tight">Kiwi.com</span>
-            </div>
-            <div className="flex items-center gap-2.5 opacity-60 hover:opacity-100 transition-opacity">
-              <div className="w-7 h-7 rounded bg-[#FF4B00] flex items-center justify-center">
-                <span className="text-white text-[11px] font-bold">L</span>
-              </div>
-              <span className="text-[#52525B] font-semibold text-sm tracking-tight">lastminute.com</span>
-            </div>
-            <div className="flex items-center gap-2.5 opacity-60 hover:opacity-100 transition-opacity">
-              <div className="w-7 h-7 rounded bg-[#FF690F] flex items-center justify-center">
-                <span className="text-white text-[11px] font-bold">K</span>
-              </div>
-              <span className="text-[#52525B] font-semibold text-sm tracking-tight">Kayak</span>
-            </div>
-            <div className="flex items-center gap-2.5 opacity-60 hover:opacity-100 transition-opacity">
-              <div className="w-7 h-7 rounded bg-[#4285F4] flex items-center justify-center">
-                <span className="text-white text-[11px] font-bold">G</span>
-              </div>
-              <span className="text-[#52525B] font-semibold text-sm tracking-tight">Google Flights</span>
-            </div>
-            <div className="flex items-center gap-2.5 opacity-60 hover:opacity-100 transition-opacity">
-              <div className="w-7 h-7 rounded bg-[#0770E3] flex items-center justify-center">
-                <span className="text-white text-[11px] font-bold">S</span>
-              </div>
-              <span className="text-[#52525B] font-semibold text-sm tracking-tight">Skyscanner</span>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ── HOW IT WORKS ── */}
-      <section id="how-it-works" className="py-24 bg-white">
-        <div className="max-w-7xl mx-auto px-6 md:px-10">
-          <div className="max-w-xl mb-16">
-            <span className="text-xs font-semibold tracking-widest uppercase text-[#3174E0] mb-3 block">
-              Simple by design
-            </span>
-            <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-[#0B0809]">
-              How Flajko works
-            </h2>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-10">
-            {steps.map(step => (
-              <div key={step.number} className="relative">
-                <span className="text-[88px] font-black text-[#F0F0F2] leading-none select-none absolute -top-6 -left-3 z-0">
-                  {step.number}
-                </span>
-                <div className="relative z-10 pt-8">
-                  <h3 className="text-xl font-bold text-[#0B0809] mb-3">{step.title}</h3>
-                  <p className="text-[#71717A] leading-relaxed text-sm">{step.description}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── DEALS ── */}
-      <section id="deals" className="py-24 bg-[#FAFAFA]">
-        <div className="max-w-7xl mx-auto px-6 md:px-10">
-          <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4">
-            <div>
-              <span className="text-xs font-semibold tracking-widest uppercase text-[#3174E0] mb-3 block">
-                This week
+      {/* ─── 2. HERO ────────────────────────────────────────────────────────── */}
+      <section className="bg-white py-[160px] overflow-hidden">
+        <div className="max-w-[1440px] mx-auto pl-[100px] pr-0 flex items-center justify-between gap-12">
+          {/* Left */}
+          <div className="flex flex-col gap-8 w-full max-w-[715px] shrink-0 pr-6 lg:pr-0">
+            {/* Tag pill */}
+            <div className="inline-flex items-center self-start px-3 py-[5px] bg-[#f0f9ff] border border-[#7dd3fc] rounded-full">
+              <span className="text-xs font-semibold text-[#0284c7] leading-4 tracking-normal">
+                ✈ EVERY THURSDAY · FREE NEWSLETTER
               </span>
-              <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-[#0B0809]">Latest deals</h2>
-              <p className="text-[#71717A] mt-3 text-sm">
-                Round-trip from Zagreb (ZAG). Updated every Thursday morning.
+            </div>
+
+            {/* Heading + subheading */}
+            <div className="flex flex-col gap-4">
+              <h1 className="text-[60px] leading-[60px] font-bold text-[#1f2937]">
+                Cheapest Weekend<br />Flights from Zagreb
+              </h1>
+              <p className="text-lg leading-7 font-normal text-[#6b7280]">
+                3 budget destinations land in your inbox every Thursday.<br className="hidden lg:block" />
+                Hand-picked, genuinely cheap, ready to book.
               </p>
             </div>
-            <p className="text-sm text-[#A1A1AA] shrink-0">Subscribe to get these in your inbox →</p>
+
+            <SubscribeForm />
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
-            {deals.map(deal => (
-              <div
-                key={deal.id}
-                className="bg-white rounded-2xl border border-[#ECECEC] p-5 hover:shadow-md hover:-translate-y-0.5 transition-all duration-200"
-              >
-                <div className="flex items-start justify-between mb-4">
-                  <div>
-                    <div className="flex items-center gap-2 mb-0.5">
-                      <span className="text-lg font-bold text-[#0B0809]">{deal.destination}</span>
-                      <span className="text-xs text-[#A1A1AA] font-mono bg-[#F4F4F5] px-1.5 py-0.5 rounded">
-                        {deal.iata}
-                      </span>
-                    </div>
-                    <span className="text-xs text-[#A1A1AA]">{deal.country}</span>
-                  </div>
-                  <div className="text-right">
-                    <div className="text-2xl font-black text-[#3174E0]">€{deal.price}</div>
-                    <div className="text-xs text-[#A1A1AA] line-through">€{deal.originalPrice}</div>
-                  </div>
-                </div>
-
-                <div className="space-y-1.5 mb-4 border-t border-[#F4F4F5] pt-4">
-                  <div className="flex items-center gap-2 text-xs text-[#71717A]">
-                    <span>✈</span>
-                    <span>{deal.departure} → {deal.return}</span>
-                  </div>
-                  <div className="flex items-center gap-2 text-xs text-[#71717A]">
-                    <span>⏱</span>
-                    <span>{deal.duration} · {deal.airline}</span>
-                  </div>
-                </div>
-
-                <div className="flex items-center justify-between pt-1">
-                  {deal.tag ? (
-                    <span className="text-[10px] font-semibold uppercase tracking-wide px-2.5 py-1 rounded-full bg-blue-50 text-[#3174E0] border border-blue-100">
-                      {deal.tag}
-                    </span>
-                  ) : (
-                    <span />
-                  )}
-                  <span className="text-xs text-[#A1A1AA]">Subscribe to book →</span>
-                </div>
+          {/* Right – 3-column image collage */}
+          <div className="hidden lg:flex items-center h-[600px] w-[605px] shrink-0 gap-[22.5px]">
+            {/* Col 1: vertically centered, 300px tall */}
+            <div className="flex items-center h-full">
+              <div className="w-[220px] h-[300px] rounded-xl shadow-[0px_25px_50px_-12px_rgba(0,0,0,0.25)] overflow-hidden shrink-0">
+                <img src={HERO_1} alt="Travel" className="w-full h-full object-cover" loading="lazy" />
               </div>
-            ))}
-          </div>
-
-          <div className="mt-12 text-center">
-            <p className="text-[#71717A] text-sm mb-4">Want deals like these in your inbox every Thursday?</p>
-            <a
-              href="#hero"
-              className="inline-flex items-center gap-2 bg-[#3174E0] text-white font-semibold text-sm px-6 py-3 rounded-xl hover:bg-[#2563c8] transition-colors"
-            >
-              Subscribe free ↑
-            </a>
+            </div>
+            {/* Col 2: full 600px */}
+            <div className="flex items-center h-full">
+              <div className="w-[220px] h-[600px] rounded-xl shadow-[0px_25px_50px_-12px_rgba(0,0,0,0.25)] overflow-hidden shrink-0">
+                <img src={HERO_2} alt="Travel" className="w-full h-full object-cover" loading="lazy" />
+              </div>
+            </div>
+            {/* Col 3: two stacked images, left-rounded only */}
+            <div className="flex flex-col justify-center gap-4 h-full">
+              <div className="w-[120px] h-[220px] rounded-l-xl shadow-[0px_25px_50px_-12px_rgba(0,0,0,0.25)] overflow-hidden shrink-0">
+                <img src={HERO_3} alt="Travel" className="w-full h-full object-cover" loading="lazy" />
+              </div>
+              <div className="w-[120px] h-[220px] rounded-l-xl shadow-[0px_25px_50px_-12px_rgba(0,0,0,0.25)] overflow-hidden shrink-0">
+                <img src={HERO_4} alt="Travel" className="w-full h-full object-cover" loading="lazy" />
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* ── TESTIMONIALS ── */}
-      <section id="testimonials" className="py-24 bg-white">
-        <div className="max-w-7xl mx-auto px-6 md:px-10">
-          <div className="max-w-xl mb-16">
-            <span className="text-xs font-semibold tracking-widest uppercase text-[#3174E0] mb-3 block">
-              What subscribers say
-            </span>
-            <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-[#0B0809]">
-              They booked. You can too.
-            </h2>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-6">
-            {testimonials.map(t => (
-              <div key={t.name} className="bg-[#FAFAFA] rounded-2xl border border-[#ECECEC] p-6 flex flex-col">
-                <div className="text-3xl text-[#D4D4D8] leading-none mb-4 font-serif">"</div>
-                <p className="text-[#52525B] text-sm leading-relaxed flex-1 mb-6">{t.quote}</p>
-                <div className="flex items-center gap-3">
-                  <div className="w-9 h-9 rounded-full bg-[#3174E0] flex items-center justify-center text-white text-xs font-bold shrink-0">
-                    {t.avatar}
-                  </div>
-                  <div>
-                    <div className="text-sm font-semibold text-[#0B0809]">{t.name}</div>
-                    <div className="text-xs text-[#A1A1AA]">{t.role}</div>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── CTA BANNER ── */}
-      <section className="bg-[#0B0809] py-24">
-        <div className="max-w-7xl mx-auto px-6 md:px-10 text-center">
-          <span className="inline-flex items-center gap-1.5 text-xs font-semibold tracking-wide uppercase text-[#3174E0] bg-[#3174E0]/10 border border-[#3174E0]/20 rounded-full px-3 py-1 mb-6">
-            ✈ Free · No spam · Unsubscribe anytime
-          </span>
-
-          <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-white mb-5 max-w-2xl mx-auto leading-[1.1]">
-            Your next weekend trip starts with one email
-          </h2>
-
-          <p className="text-[#A1A1AA] text-lg mb-10 max-w-sm mx-auto">
-            Join thousands of Zagreb travelers who never overpay for weekend flights.
+      {/* ─── 3. PARTNERS BAR ────────────────────────────────────────────────── */}
+      <section className="bg-[#f9fafb] py-20">
+        <div className="max-w-[1240px] mx-auto px-6 lg:px-0 flex flex-col gap-8 items-center">
+          <p className="text-xs font-semibold text-[#9ca3af] leading-4 tracking-normal text-center">
+            FLIGHT DATA POWERED BY
           </p>
+          <div className="flex flex-wrap items-center justify-center gap-16">
+            <img src={LOGO_KIWI}       alt="Kiwi.com"        width={64}  height={32} />
+            <img src={LOGO_LASTMINUTE} alt="Lastminute.com"  width={205} height={24} loading="lazy" />
+            <img src={LOGO_KAYAK}      alt="Kayak"           width={126} height={24} loading="lazy" />
+            <img src={LOGO_GOOGLE}     alt="Google Flights"  width={148} height={24} loading="lazy" />
+          </div>
+        </div>
+      </section>
 
-          <div className="flex justify-center">
-            <SubscribeForm
-              email={email}
-              setEmail={setEmail}
-              gdprConsent={gdprConsent}
-              setGdprConsent={setGdprConsent}
-              loading={loading}
-              status={status}
-              errorMessage={errorMessage}
-              onSubmit={handleSubmit}
-              dark
+      {/* ─── 4. HOW IT WORKS ────────────────────────────────────────────────── */}
+      <section id="how-it-works" className="bg-white py-[160px]">
+        <div className="max-w-[1240px] mx-auto px-6 lg:px-0 flex flex-col gap-28">
+
+          {/* Heading + steps */}
+          <div className="flex flex-col gap-16">
+            <div className="flex flex-col gap-3">
+              <span className="text-xs font-semibold text-[#0284c7] leading-4">HOW IT WORKS</span>
+              <h2 className="text-[48px] leading-[48px] font-bold text-[#1f2937]">It's This Easy</h2>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+              {steps.map(({ n, title, desc }) => (
+                <div key={n} className="flex flex-col gap-4">
+                  {/* Numbered badge */}
+                  <div className="w-14 h-14 rounded-full border border-[#7dd3fc] flex items-center justify-center shrink-0">
+                    <div className="w-8 h-8 rounded-full bg-[#0284c7] flex items-center justify-center">
+                      <span className="text-xl font-bold text-white leading-8">{n}</span>
+                    </div>
+                  </div>
+                  <div className="flex flex-col gap-2">
+                    <h3 className="text-xl font-bold text-[#1f2937] leading-8">{title}</h3>
+                    <p className="text-sm font-normal text-[#6b7280] leading-5">{desc}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Flow diagram */}
+          <div className="w-full h-[337px] rounded-2xl overflow-hidden">
+            <img
+              src={VISUAL_FLOW}
+              alt="Subscribe → Get deal email → Airplane → Book"
+              className="w-full h-full object-cover"
+              loading="lazy"
             />
           </div>
         </div>
       </section>
 
-      {/* ── FOOTER ── */}
-      <footer className="bg-[#0B0809] border-t border-[#1A1A1A] py-8">
-        <div className="max-w-7xl mx-auto px-6 md:px-10 flex flex-col md:flex-row items-center justify-between gap-4">
-          <Image src="/logo.svg" alt="Flajko" width={80} height={22} className="brightness-0 invert opacity-60" />
-          <p className="text-xs text-[#444]">© {new Date().getFullYear()} Flajko. All rights reserved.</p>
+      {/* ─── 5. LATEST DEALS ────────────────────────────────────────────────── */}
+      <section id="deals" className="bg-[#f9fafb] py-[160px]">
+        <div className="max-w-[1240px] mx-auto px-6 lg:px-0 flex flex-col gap-12">
+
+          {/* Header */}
+          <div className="flex flex-col gap-3">
+            <span className="text-xs font-semibold text-[#0284c7] leading-4">THIS WEEK</span>
+            <h2 className="text-[48px] leading-[48px] font-bold text-[#1f2937]">Latest Deals</h2>
+            <p className="text-sm font-normal text-[#6b7280] leading-5">
+              Round-trip from Zagreb. Updated every Thursday morning.
+            </p>
+          </div>
+
+          {/* 2×2 deal grid */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+            {deals.map((deal) => (
+              <div
+                key={deal.city}
+                className="bg-white border border-[#d1d5db] rounded-2xl p-5 flex gap-5 items-start"
+              >
+                {/* Destination image */}
+                <div className="w-[218px] h-[226px] rounded-lg overflow-hidden shrink-0">
+                  <img
+                    src={deal.image}
+                    alt={deal.city}
+                    className="w-full h-full object-cover"
+                    loading="lazy"
+                  />
+                </div>
+
+                {/* Card content */}
+                <div className="flex flex-col justify-between flex-1 self-stretch min-w-0">
+                  <div className="flex flex-col gap-5">
+                    {/* City + price */}
+                    <div className="flex flex-col gap-3">
+                      <div className="flex items-start justify-between gap-2">
+                        <h3 className="text-xl font-bold text-[#1f2937] leading-8">{deal.city}</h3>
+                        <span className="text-2xl font-bold text-[#0284c7] leading-9 whitespace-nowrap">
+                          {deal.price}
+                        </span>
+                      </div>
+                      <p className="text-sm font-normal text-[#6b7280] leading-5">{deal.blurb}</p>
+                    </div>
+
+                    {/* Meta rows */}
+                    <div className="flex flex-col gap-3">
+                      {[
+                        { icon: ICON_AIRPLANE, text: deal.dates },
+                        { icon: ICON_BED,      text: deal.hotel },
+                        { icon: ICON_CLOCK,    text: deal.observed },
+                      ].map(({ icon, text }) => (
+                        <div key={text} className="flex items-center gap-2">
+                          <img src={icon} alt="" width={12} height={12} className="shrink-0" />
+                          <span className="text-xs font-semibold text-[#6b7280] leading-4">{text}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* View button */}
+                  <div className="flex justify-end mt-3">
+                    <button className="flex items-center gap-2 px-3 py-2 text-sm font-semibold text-[#0284c7] rounded-md hover:bg-[#f0f9ff] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0284c7] active:scale-[0.98]">
+                      View
+                      <img src={ICON_ARROW} alt="" width={16} height={16} />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Below-grid CTA */}
+          <div className="flex flex-col items-center gap-4 pt-4">
+            <p className="text-sm font-normal text-[#6b7280] leading-5 text-center">
+              Want deals like these in your inbox every Thursday?
+            </p>
+            <button className="flex items-center gap-2 px-5 py-2.5 bg-[#0284c7] text-white text-sm font-semibold rounded-md hover:bg-[#0369a1] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0284c7] active:scale-[0.98]">
+              Subscribe for Free
+              <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+                <path d="M3.75 9H14.25M14.25 9L9.75 4.5M14.25 9L9.75 13.5" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      {/* ─── 6. REVIEWS ─────────────────────────────────────────────────────── */}
+      <section id="reviews" className="bg-white py-[160px]">
+        <div className="max-w-[1240px] mx-auto px-6 lg:px-0 flex flex-col gap-12">
+
+          <div className="flex flex-col gap-3">
+            <span className="text-xs font-semibold text-[#0284c7] leading-4">WHAT SUBSCRIBERS SAY</span>
+            <h2 className="text-[48px] leading-[48px] font-bold text-[#1f2937]">They Booked. You Can Too.</h2>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+            {reviews.map((r) => (
+              <div
+                key={r.name}
+                className="bg-[#f9fafb] border border-[#d1d5db] rounded-2xl p-6 flex flex-col gap-4"
+              >
+                <img src={ICON_QUOTES} alt="" width={24} height={24} />
+                <p className="text-sm font-normal text-[#1f2937] leading-5 flex-1">{r.text}</p>
+                <div className="flex items-center gap-2">
+                  <div className="w-9 h-9 rounded-full overflow-hidden shrink-0">
+                    <img src={r.avatar} alt={r.name} className="w-full h-full object-cover" loading="lazy" />
+                  </div>
+                  <div className="flex flex-col gap-1">
+                    <span className="text-sm font-semibold text-[#1f2937] leading-5">{r.name}</span>
+                    <span className="text-xs font-normal text-[#9ca3af] leading-4">{r.role}</span>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ─── 7. FINAL CTA ───────────────────────────────────────────────────── */}
+      <section className="bg-[#111827] py-[160px]">
+        <div className="max-w-[1240px] mx-auto px-6 lg:px-0 flex flex-col gap-8 items-center">
+
+          {/* Tag pill */}
+          <div className="inline-flex items-center px-[12.8px] py-[4.8px] bg-[rgba(49,116,224,0.1)] border border-[#0369a1] rounded-full">
+            <span className="text-xs font-semibold text-[#0284c7] leading-4 tracking-[0.3px] uppercase">
+              ✈ Free · No spam · Unsubscribe anytime
+            </span>
+          </div>
+
+          {/* Heading + sub */}
+          <div className="flex flex-col gap-4 items-center max-w-[672px] text-center">
+            <h2 className="text-[48px] leading-[48px] font-bold text-white">
+              Your Next Weekend Trip Starts With One Email
+            </h2>
+            <p className="text-lg font-normal text-[#9ca3af] leading-7">
+              3 budget destinations land in your inbox every Thursday.<br />
+              Hand-picked, genuinely cheap, ready to book.
+            </p>
+          </div>
+
+          <SubscribeForm dark centered />
+        </div>
+      </section>
+
+      {/* ─── 8. FOOTER ──────────────────────────────────────────────────────── */}
+      <footer className="bg-[#111827] border-t border-[#0c4a6e] py-8">
+        <div className="max-w-[1240px] mx-auto px-6 lg:px-0 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <img src={LOGO_FOOTER} alt="Flajko" width={100} height={30} />
+
+          <p className="text-xs font-normal text-[#9ca3af] leading-4 text-center">
+            © 2026 Flajko. All rights reserved.
+          </p>
+
           <div className="flex items-center gap-5">
-            <a href="/privacy" target="_blank" rel="noopener noreferrer" className="text-xs text-[#444] hover:text-[#888] transition-colors">
+            <Link href="/privacy" className="text-xs font-normal text-[#9ca3af] leading-4 hover:text-white transition-colors">
               Privacy policy
-            </a>
-            <a href="/unsubscribed" className="text-xs text-[#444] hover:text-[#888] transition-colors">
-              Unsubscribe
+            </Link>
+            <a href="#" className="text-xs font-normal text-[#9ca3af] leading-4 hover:text-white transition-colors">
+              Terms of Use
             </a>
           </div>
         </div>
       </footer>
+
     </div>
   )
 }
