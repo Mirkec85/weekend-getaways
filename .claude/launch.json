@@ -4,14 +4,14 @@
     {
       "name": "Next.js",
       "runtimeExecutable": "cmd",
-      "runtimeArgs": ["/c", "node", "./node_modules/next/dist/bin/next", "dev", "--port", "3002"],
-      "port": 3002
+      "runtimeArgs": ["/c", "npm", "run", "dev"],
+      "port": 3000
     },
     {
       "name": "React Email Preview",
       "runtimeExecutable": "cmd",
-      "runtimeArgs": ["/c", "npx", "email", "dev", "--port", "3003"],
-      "port": 3003
+      "runtimeArgs": ["/c", "npx", "react-email", "dev", "--dir", "./pipeline/emails", "--port", "3001"],
+      "port": 3001
     }
   ]
 }
