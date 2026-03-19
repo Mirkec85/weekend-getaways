@@ -69,11 +69,12 @@ async function main() {
     })
   )
 
-  console.log('Sending test email to mirkomartic1@gmail.com...')
+  const recipients = ['mirkomartic1@gmail.com', 'v.suza@yahoo.com']
+  console.log(`Sending test email to ${recipients.join(', ')}...`)
 
   const { data, error } = await resend.emails.send({
     from: process.env.RESEND_FROM ?? 'hello@flajko.com',
-    to: 'mirkomartic1@gmail.com',
+    to: recipients,
     subject: '✈ Flajko — Weekly Deals (template test)',
     html,
   })
@@ -84,7 +85,7 @@ async function main() {
   }
 
   console.log('Sent! Message ID:', data?.id)
-  console.log('Check mirkomartic1@gmail.com for the rendered email.')
+  console.log(`Check ${recipients.join(' and ')} for the rendered email.`)
 }
 
 main()
