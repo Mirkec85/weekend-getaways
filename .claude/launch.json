@@ -1,0 +1,18 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "Next.js",
+      "runtimeExecutable": "cmd",
+      "runtimeArgs": ["/c", "npm", "run", "dev"],
+      "port": 3000,
+      "autoPort": true
+    },
+    {
+      "name": "React Email Preview",
+      "runtimeExecutable": "cmd",
+      "runtimeArgs": ["/c", "npx", "react-email", "dev", "--dir", "./pipeline/emails", "--port", "3001"],
+      "port": 3001
+    }
+  ]
+}

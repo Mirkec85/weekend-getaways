@@ -12,16 +12,23 @@
     "reset:subscriber": "ts-node --project pipeline/tsconfig.json scripts/reset-test-subscriber.ts"
   },
   "dependencies": {
+    "@radix-ui/react-slot": "^1.2.4",
     "@react-email/components": "^1.0.8",
     "@supabase/supabase-js": "^2.97.0",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
+    "lucide-react": "^0.577.0",
     "next": "16.1.6",
+    "radix-ui": "^1.4.3",
     "react": "19.2.3",
     "react-dom": "19.2.3",
     "react-email": "^5.2.8",
-    "resend": "^6.9.2"
+    "resend": "^6.9.2",
+    "tailwind-merge": "^3.5.0"
   },
   "devDependencies": {
+    "@react-email/preview-server": "^5.2.8",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
