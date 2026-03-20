@@ -121,42 +121,72 @@ const NAV_LINKS = [
 ]
 
 // ── Shared subscribe form ─────────────────────────────────────────────────────
-// `stackOnMobile` — CTA section: input + button stack vertically on mobile, both full-width
-// default (Hero): input flex-1 + button shrink-0 always in a row
+// Always vertical stack: input full-width, button full-width below.
+// Wired to /api/subscribe — handles validation, success, and errors inline.
 function SubscribeForm({
   dark = false,
   centered = false,
-  stackOnMobile = false,
 }: {
   dark?: boolean
   centered?: boolean
-  stackOnMobile?: boolean
 }) {
-  const [email, setEmail] = useState('')
-  const [agreed, setAgreed] = useState(false)
+  const [email, setEmail]     = useState('')
+  const [agreed, setAgreed]   = useState(false)
+  const [status, setStatus]   = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
+  const [message, setMessage] = useState('')
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
-    console.log('Subscribe submitted:', { email, agreed })
+    setStatus('loading')
+    setMessage('')
+
+    try {
+      const res = await fetch('/api/subscribe', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, gdpr_consent: agreed }),
+      })
+      const data = await res.json()
+
+      if (!res.ok) {
+        setStatus('error')
+        setMessage(data.error ?? 'Something went wrong. Please try again.')
+        return
+      }
+
+      setStatus('success')
+      setMessage("You're in! Check your inbox Thursday.")
+      setEmail('')
+      setAgreed(false)
+    } catch {
+      setStatus('error')
+      setMessage('Something went wrong. Please try again.')
+    }
+  }
+
+  if (status === 'success') {
+    return (
+      <p className={`text-sm font-semibold ${dark ? 'text-[#7dd3fc]' : 'text-[#0284c7]'}`}>
+        {message}
+      </p>
+    )
   }
 
   return (
-    <form onSubmit={handleSubmit} className={`flex flex-col gap-4 w-full ${centered ? 'items-center' : 'items-start'}`}>
-      {/* Input + Button row */}
-      <div className={[
-        'flex gap-2 w-full',
-        stackOnMobile ? 'flex-col md:flex-row' : 'flex-row',
-      ].join(' ')}>
+    <form onSubmit={handleSubmit} className={`flex flex-col gap-2 w-full ${centered ? 'items-center' : 'items-start'}`}>
+      {/* Input + Button: stacked on mobile, inline on desktop */}
+      <div className="flex flex-col md:flex-row gap-2 w-full">
         <input
           type="email"
           value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          onChange={(e) => { setEmail(e.target.value); setMessage('') }}
           placeholder="your@email.com"
           required
+          disabled={status === 'loading'}
           className={[
             'h-10 px-4 text-sm rounded-lg border outline-none transition-colors',
             'shadow-[0px_1px_2px_0px_rgba(0,0,0,0.05)]',
-            stackOnMobile ? 'w-full md:w-[400px] md:shrink-0' : 'flex-1 min-w-0',
+            'w-full md:flex-1 md:max-w-[400px]',
             dark
               ? 'bg-transparent border-[#d1d5db] text-white placeholder-[#9ca3af] focus:border-[#0284c7]'
               : 'bg-white border-[#d1d5db] text-[#111827] placeholder-[#9ca3af] focus:border-[#0284c7]',
@@ -164,18 +194,20 @@ function SubscribeForm({
         />
         <button
           type="submit"
-          className={[
-            'h-10 px-5 bg-[#0284c7] text-white text-sm font-semibold rounded-md whitespace-nowrap',
-            'hover:bg-[#0369a1] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0284c7] active:scale-[0.98]',
-            stackOnMobile ? 'w-full md:w-auto' : 'shrink-0',
-          ].join(' ')}
+          disabled={status === 'loading'}
+          className="h-10 w-full md:w-auto md:shrink-0 px-5 bg-[#0284c7] text-white text-sm font-semibold rounded-md whitespace-nowrap hover:bg-[#0369a1] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0284c7] active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed"
         >
-          Subscribe
+          {status === 'loading' ? 'Subscribing…' : 'Subscribe'}
         </button>
       </div>
 
+      {/* Inline error */}
+      {status === 'error' && (
+        <p className="text-xs text-red-400">{message}</p>
+      )}
+
       {/* Checkbox + privacy */}
-      <label className={`flex items-center gap-2 text-xs cursor-pointer ${centered ? 'justify-center' : ''}`}>
+      <label className={`flex items-center gap-2 text-xs cursor-pointer mt-2 ${centered ? 'justify-center' : ''}`}>
         <input
           type="checkbox"
           checked={agreed}
@@ -586,7 +618,6 @@ export default function HomePage() {
             </p>
           </div>
 
-          {/* stackOnMobile: input + button stack vertically on mobile, both full-width */}
           <SubscribeForm dark centered />
         </div>
       </section>
