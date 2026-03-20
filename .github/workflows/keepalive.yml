@@ -12,6 +12,19 @@ jobs:
       contents: write
     steps:
       - uses: actions/checkout@v4
+      - name: Ping Supabase
+        run: |
+          RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" \
+            -H "apikey: ${{ secrets.SUPABASE_ANON_KEY }}" \
+            -H "Authorization: Bearer ${{ secrets.SUPABASE_ANON_KEY }}" \
+            "https://olalbfyvdmlvhtislvjf.supabase.co/rest/v1/subscribers?select=id&limit=1")
+          echo "Supabase ping status: $RESPONSE"
+          if [ "$RESPONSE" -ge 200 ] && [ "$RESPONSE" -lt 300 ]; then
+            echo "✅ Supabase ping successful"
+          else
+            echo "❌ Supabase ping failed"
+            exit 1
+          fi
       - name: Create keepalive commit
         run: |
           git config user.email "github-actions[bot]@users.noreply.github.com"
