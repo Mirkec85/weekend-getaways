@@ -12,6 +12,12 @@ const HERO_2           = 'https://www.figma.com/api/mcp/asset/761710ca-83e7-4e5a
 const HERO_3           = 'https://www.figma.com/api/mcp/asset/a49b39d5-78f6-49e6-aa2c-a1be98b9d1d7'
 const HERO_4           = 'https://www.figma.com/api/mcp/asset/7078d1f1-e4fc-4fff-9324-737d83f77cda'
 
+// Mobile-specific assets (from Figma node 201:891)
+const HAMBURGER_ICON   = 'https://www.figma.com/api/mcp/asset/6339a7bd-5e33-4074-ac54-992efe08ffde'
+const CLOSE_ICON       = 'https://www.figma.com/api/mcp/asset/87b699d4-3478-4bf6-ad68-25370851f506'
+const HERO_MOBILE      = 'https://www.figma.com/api/mcp/asset/2bce29e5-d228-4cb9-9048-f02106272ee0'
+const VISUAL_FLOW_MOBILE = 'https://www.figma.com/api/mcp/asset/057d2568-ef24-4389-bd08-77bc14753a3e'
+
 const LOGO_KIWI        = 'https://www.figma.com/api/mcp/asset/0b120ba1-bf6e-45f0-8eac-d65e7b902ca4'
 const LOGO_LASTMINUTE  = 'https://www.figma.com/api/mcp/asset/683a753c-dbc0-42a0-b596-a0e7f7f29a6b'
 const LOGO_KAYAK       = 'https://www.figma.com/api/mcp/asset/6aaf0819-2ba4-4c66-be37-335c65db8847'
@@ -108,8 +114,24 @@ const steps = [
   },
 ]
 
+const NAV_LINKS = [
+  { label: 'How it works', href: '#how-it-works' },
+  { label: 'Deals',        href: '#deals' },
+  { label: 'Reviews',      href: '#reviews' },
+]
+
 // ── Shared subscribe form ─────────────────────────────────────────────────────
-function SubscribeForm({ dark = false, centered = false }: { dark?: boolean; centered?: boolean }) {
+// `stackOnMobile` — CTA section: input + button stack vertically on mobile, both full-width
+// default (Hero): input flex-1 + button shrink-0 always in a row
+function SubscribeForm({
+  dark = false,
+  centered = false,
+  stackOnMobile = false,
+}: {
+  dark?: boolean
+  centered?: boolean
+  stackOnMobile?: boolean
+}) {
   const [email, setEmail] = useState('')
   const [agreed, setAgreed] = useState(false)
 
@@ -121,7 +143,10 @@ function SubscribeForm({ dark = false, centered = false }: { dark?: boolean; cen
   return (
     <form onSubmit={handleSubmit} className={`flex flex-col gap-4 w-full ${centered ? 'items-center' : 'items-start'}`}>
       {/* Input + Button row */}
-      <div className="flex flex-col sm:flex-row gap-2 w-full">
+      <div className={[
+        'flex gap-2 w-full',
+        stackOnMobile ? 'flex-col md:flex-row' : 'flex-row',
+      ].join(' ')}>
         <input
           type="email"
           value={email}
@@ -131,7 +156,7 @@ function SubscribeForm({ dark = false, centered = false }: { dark?: boolean; cen
           className={[
             'h-10 px-4 text-sm rounded-lg border outline-none transition-colors',
             'shadow-[0px_1px_2px_0px_rgba(0,0,0,0.05)]',
-            'w-full sm:w-[400px] shrink-0',
+            stackOnMobile ? 'w-full md:w-[400px] md:shrink-0' : 'flex-1 min-w-0',
             dark
               ? 'bg-transparent border-[#d1d5db] text-white placeholder-[#9ca3af] focus:border-[#0284c7]'
               : 'bg-white border-[#d1d5db] text-[#111827] placeholder-[#9ca3af] focus:border-[#0284c7]',
@@ -139,7 +164,11 @@ function SubscribeForm({ dark = false, centered = false }: { dark?: boolean; cen
         />
         <button
           type="submit"
-          className="h-10 px-5 bg-[#0284c7] text-white text-sm font-semibold rounded-md whitespace-nowrap hover:bg-[#0369a1] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0284c7] active:scale-[0.98]"
+          className={[
+            'h-10 px-5 bg-[#0284c7] text-white text-sm font-semibold rounded-md whitespace-nowrap',
+            'hover:bg-[#0369a1] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0284c7] active:scale-[0.98]',
+            stackOnMobile ? 'w-full md:w-auto' : 'shrink-0',
+          ].join(' ')}
         >
           Subscribe
         </button>
@@ -166,24 +195,85 @@ function SubscribeForm({ dark = false, centered = false }: { dark?: boolean; cen
 
 // ── Page ──────────────────────────────────────────────────────────────────────
 export default function HomePage() {
+  const [sidebarOpen, setSidebarOpen] = useState(false)
+
   return (
     <div className="min-h-screen bg-white font-[Inter,sans-serif]">
+
+      {/* ─── MOBILE SIDEBAR ──────────────────────────────────────────────────
+          Structural change: new full-screen overlay component.
+          Slides in from left, fades in on open; reverses on close.
+          Only visible on mobile — hidden on md+ via pointer-events and opacity.
+      ──────────────────────────────────────────────────────────────────────── */}
+      {/* Backdrop */}
+      <div
+        className={[
+          'fixed inset-0 z-[55] bg-black/40 md:hidden',
+          'transition-opacity duration-300',
+          sidebarOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none',
+        ].join(' ')}
+        onClick={() => setSidebarOpen(false)}
+        aria-hidden="true"
+      />
+
+      {/* Sidebar panel — slides from left */}
+      <div
+        className={[
+          'fixed inset-0 z-[60] flex flex-col bg-white md:hidden',
+          'transition-transform duration-300 ease-in-out',
+          sidebarOpen ? 'translate-x-0' : '-translate-x-full',
+        ].join(' ')}
+        role="dialog"
+        aria-modal="true"
+        aria-label="Navigation menu"
+      >
+        {/* Sidebar top bar with close icon */}
+        <div className="sticky top-0 h-[64.8px] flex items-center justify-end px-6 shrink-0">
+          <button
+            onClick={() => setSidebarOpen(false)}
+            className="w-6 h-6 flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0284c7] rounded-full"
+            aria-label="Close menu"
+          >
+            <img src={CLOSE_ICON} alt="" width={24} height={24} />
+          </button>
+        </div>
+
+        {/* Nav links — centered, large text */}
+        <div className="flex flex-col items-center justify-center gap-12 flex-1 px-6">
+          {NAV_LINKS.map(({ label, href }) => (
+            <a
+              key={label}
+              href={href}
+              onClick={() => setSidebarOpen(false)}
+              className="text-xl font-normal text-[#6b7280] leading-8 hover:text-[#0284c7] transition-colors"
+            >
+              {label}
+            </a>
+          ))}
+        </div>
+
+        {/* CTA buttons at bottom */}
+        <div className="flex flex-col gap-3 px-6 pb-6 shrink-0">
+          <button className="w-full px-5 py-2.5 bg-[#0284c7] text-white text-base font-semibold rounded-md hover:bg-[#0369a1] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0284c7] active:scale-[0.98]">
+            Register
+          </button>
+          <button className="w-full px-5 py-2.5 text-[#111827] text-base font-semibold border border-[#0284c7] rounded-md hover:bg-[#f0f9ff] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0284c7] active:scale-[0.98]">
+            Log In
+          </button>
+        </div>
+      </div>
 
       {/* ─── 1. NAV ─────────────────────────────────────────────────────────── */}
       <nav className="sticky top-0 z-50 bg-white border-b border-[#e5e7eb] shadow-[0px_1px_2px_0px_rgba(0,0,0,0.05)]">
         <div className="max-w-[1240px] mx-auto px-6 lg:px-0 h-16 flex items-center justify-between">
-          {/* Logo */}
+          {/* Logo — always visible */}
           <a href="#" className="shrink-0">
             <img src={LOGO_NAV} alt="Flajko" width={100} height={30} className="block" />
           </a>
 
-          {/* Nav links — hidden on mobile */}
+          {/* Nav links — hidden on mobile, visible md+ */}
           <div className="hidden md:flex items-center gap-8">
-            {[
-              { label: 'How it works', href: '#how-it-works' },
-              { label: 'Deals', href: '#deals' },
-              { label: 'Reviews', href: '#reviews' },
-            ].map(({ label, href }) => (
+            {NAV_LINKS.map(({ label, href }) => (
               <a
                 key={label}
                 href={href}
@@ -194,8 +284,8 @@ export default function HomePage() {
             ))}
           </div>
 
-          {/* Buttons */}
-          <div className="flex items-center gap-2">
+          {/* Desktop: Log In + Register buttons — hidden on mobile */}
+          <div className="hidden md:flex items-center gap-2">
             <button className="px-3 py-2 text-sm font-semibold text-[#1f2937] rounded-md hover:bg-[#f9fafb] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0284c7] active:scale-[0.98]">
               Log In
             </button>
@@ -203,14 +293,25 @@ export default function HomePage() {
               Register
             </button>
           </div>
+
+          {/* Mobile: hamburger icon — hidden on md+ */}
+          {/* Structural change: new button for mobile nav trigger */}
+          <button
+            className="md:hidden w-6 h-6 flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0284c7] rounded"
+            onClick={() => setSidebarOpen(true)}
+            aria-label="Open menu"
+            aria-expanded={sidebarOpen}
+          >
+            <img src={HAMBURGER_ICON} alt="" width={24} height={24} />
+          </button>
         </div>
       </nav>
 
       {/* ─── 2. HERO ────────────────────────────────────────────────────────── */}
-      <section className="bg-white py-[160px] overflow-hidden">
-        <div className="max-w-[1440px] mx-auto pl-[100px] pr-0 flex items-center justify-between gap-12">
-          {/* Left */}
-          <div className="flex flex-col gap-8 w-full max-w-[715px] shrink-0 pr-6 lg:pr-0">
+      <section className="bg-white py-16 md:py-[160px] overflow-hidden">
+        <div className="max-w-[1440px] mx-auto px-6 md:pl-[100px] md:pr-0 flex flex-col md:flex-row items-center justify-between gap-10 md:gap-12">
+          {/* Left — full width on mobile */}
+          <div className="flex flex-col gap-6 md:gap-8 w-full max-w-full md:max-w-[715px] shrink-0 pr-0 lg:pr-0">
             {/* Tag pill */}
             <div className="inline-flex items-center self-start px-3 py-[5px] bg-[#f0f9ff] border border-[#7dd3fc] rounded-full">
               <span className="text-xs font-semibold text-[#0284c7] leading-4 tracking-normal">
@@ -220,19 +321,30 @@ export default function HomePage() {
 
             {/* Heading + subheading */}
             <div className="flex flex-col gap-4">
-              <h1 className="text-[60px] leading-[60px] font-bold text-[#1f2937]">
+              <h1 className="text-[48px] leading-[48px] md:text-[60px] md:leading-[60px] font-bold text-[#1f2937]">
                 Cheapest Weekend<br />Flights from Zagreb
               </h1>
-              <p className="text-lg leading-7 font-normal text-[#6b7280]">
+              <p className="text-base md:text-lg leading-6 md:leading-7 font-normal text-[#6b7280]">
                 3 budget destinations land in your inbox every Thursday.<br className="hidden lg:block" />
                 Hand-picked, genuinely cheap, ready to book.
               </p>
             </div>
 
             <SubscribeForm />
+
+            {/* Mobile hero image — shown below form, hidden on desktop */}
+            {/* Structural change: mobile-only image block */}
+            <div className="md:hidden w-full h-[300px] rounded-xl overflow-hidden shadow-[0px_25px_50px_-12px_rgba(0,0,0,0.25)]">
+              <img
+                src={HERO_MOBILE}
+                alt="Weekend travel destinations"
+                className="w-full h-full object-cover"
+                loading="lazy"
+              />
+            </div>
           </div>
 
-          {/* Right – 3-column image collage */}
+          {/* Right – 3-column image collage — desktop only */}
           <div className="hidden lg:flex items-center h-[600px] w-[605px] shrink-0 gap-[22.5px]">
             {/* Col 1: vertically centered, 300px tall */}
             <div className="flex items-center h-full">
@@ -260,31 +372,39 @@ export default function HomePage() {
       </section>
 
       {/* ─── 3. PARTNERS BAR ────────────────────────────────────────────────── */}
-      <section className="bg-[#f9fafb] py-20">
+      <section className="bg-[#f9fafb] py-16 md:py-20">
         <div className="max-w-[1240px] mx-auto px-6 lg:px-0 flex flex-col gap-8 items-center">
           <p className="text-xs font-semibold text-[#9ca3af] leading-4 tracking-normal text-center">
             FLIGHT DATA POWERED BY
           </p>
-          <div className="flex flex-wrap items-center justify-center gap-16">
-            <img src={LOGO_KIWI}       alt="Kiwi.com"        width={64}  height={32} />
-            <img src={LOGO_LASTMINUTE} alt="Lastminute.com"  width={205} height={24} loading="lazy" />
-            <img src={LOGO_KAYAK}      alt="Kayak"           width={126} height={24} loading="lazy" />
-            <img src={LOGO_GOOGLE}     alt="Google Flights"  width={148} height={24} loading="lazy" />
+          {/* Mobile: 2-row grid (Kiwi+Lastminute / Kayak+Google). Desktop: single row. */}
+          <div className="flex flex-col md:flex-row items-center justify-center gap-10">
+            {/* Row 1 on mobile */}
+            <div className="flex items-center justify-center gap-10">
+              <img src={LOGO_KIWI}       alt="Kiwi.com"       width={64}  height={32} />
+              <img src={LOGO_LASTMINUTE} alt="Lastminute.com" width={205} height={24} loading="lazy" />
+            </div>
+            {/* Row 2 on mobile */}
+            <div className="flex items-center justify-center gap-10">
+              <img src={LOGO_KAYAK}  alt="Kayak"         width={126} height={24} loading="lazy" />
+              <img src={LOGO_GOOGLE} alt="Google Flights" width={148} height={24} loading="lazy" />
+            </div>
           </div>
         </div>
       </section>
 
       {/* ─── 4. HOW IT WORKS ────────────────────────────────────────────────── */}
-      <section id="how-it-works" className="bg-white py-[160px]">
-        <div className="max-w-[1240px] mx-auto px-6 lg:px-0 flex flex-col gap-28">
+      <section id="how-it-works" className="bg-white py-16 md:py-[160px]">
+        <div className="max-w-[1240px] mx-auto px-6 lg:px-0 flex flex-col gap-12 md:gap-28">
 
           {/* Heading + steps */}
-          <div className="flex flex-col gap-16">
+          <div className="flex flex-col gap-10 md:gap-16">
             <div className="flex flex-col gap-3">
               <span className="text-xs font-semibold text-[#0284c7] leading-4">HOW IT WORKS</span>
-              <h2 className="text-[48px] leading-[48px] font-bold text-[#1f2937]">It's This Easy</h2>
+              <h2 className="text-[36px] leading-[48px] md:text-[48px] md:leading-[48px] font-bold text-[#1f2937]">It&apos;s This Easy</h2>
             </div>
 
+            {/* Steps: single column on mobile, 3 columns on md+ */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
               {steps.map(({ n, title, desc }) => (
                 <div key={n} className="flex flex-col gap-4">
@@ -303,8 +423,9 @@ export default function HomePage() {
             </div>
           </div>
 
-          {/* Flow diagram */}
-          <div className="w-full h-[337px] rounded-2xl overflow-hidden">
+          {/* Flow diagram — conditional mobile vs desktop illustration */}
+          {/* Structural change: two sibling divs with conditional visibility */}
+          <div className="hidden md:block w-full h-[337px] rounded-2xl overflow-hidden">
             <img
               src={VISUAL_FLOW}
               alt="Subscribe → Get deal email → Airplane → Book"
@@ -312,31 +433,40 @@ export default function HomePage() {
               loading="lazy"
             />
           </div>
+          <div className="block md:hidden w-full rounded-2xl overflow-hidden">
+            <img
+              src={VISUAL_FLOW_MOBILE}
+              alt="Subscribe → Get deal email → Airplane → Book"
+              className="w-full h-auto object-cover"
+              loading="lazy"
+            />
+          </div>
         </div>
       </section>
 
       {/* ─── 5. LATEST DEALS ────────────────────────────────────────────────── */}
-      <section id="deals" className="bg-[#f9fafb] py-[160px]">
-        <div className="max-w-[1240px] mx-auto px-6 lg:px-0 flex flex-col gap-12">
+      <section id="deals" className="bg-[#f9fafb] py-16 md:py-[160px]">
+        <div className="max-w-[1240px] mx-auto px-6 lg:px-0 flex flex-col gap-6 md:gap-12">
 
           {/* Header */}
           <div className="flex flex-col gap-3">
             <span className="text-xs font-semibold text-[#0284c7] leading-4">THIS WEEK</span>
-            <h2 className="text-[48px] leading-[48px] font-bold text-[#1f2937]">Latest Deals</h2>
+            <h2 className="text-[36px] leading-[48px] md:text-[48px] md:leading-[48px] font-bold text-[#1f2937]">Latest Deals</h2>
             <p className="text-sm font-normal text-[#6b7280] leading-5">
               Round-trip from Zagreb. Updated every Thursday morning.
             </p>
           </div>
 
-          {/* 2×2 deal grid */}
+          {/* Deal cards: 2×2 grid on desktop, single column on mobile */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
             {deals.map((deal) => (
               <div
                 key={deal.city}
-                className="bg-white border border-[#d1d5db] rounded-2xl p-5 flex gap-5 items-start"
+                className="bg-white border border-[#d1d5db] rounded-2xl p-5 flex flex-col md:flex-row gap-5 items-start"
               >
-                {/* Destination image */}
-                <div className="w-[218px] h-[226px] rounded-lg overflow-hidden shrink-0">
+                {/* Destination image — full width on mobile, fixed size on desktop */}
+                {/* Structural change: w-full on mobile → w-[218px] on md+ */}
+                <div className="w-full h-[226px] md:w-[218px] md:h-[226px] md:shrink-0 rounded-lg overflow-hidden">
                   <img
                     src={deal.image}
                     alt={deal.city}
@@ -346,7 +476,7 @@ export default function HomePage() {
                 </div>
 
                 {/* Card content */}
-                <div className="flex flex-col justify-between flex-1 self-stretch min-w-0">
+                <div className="flex flex-col justify-between flex-1 self-stretch min-w-0 w-full">
                   <div className="flex flex-col gap-5">
                     {/* City + price */}
                     <div className="flex flex-col gap-3">
@@ -402,14 +532,15 @@ export default function HomePage() {
       </section>
 
       {/* ─── 6. REVIEWS ─────────────────────────────────────────────────────── */}
-      <section id="reviews" className="bg-white py-[160px]">
-        <div className="max-w-[1240px] mx-auto px-6 lg:px-0 flex flex-col gap-12">
+      <section id="reviews" className="bg-white py-16 md:py-[160px]">
+        <div className="max-w-[1240px] mx-auto px-6 lg:px-0 flex flex-col gap-6 md:gap-12">
 
           <div className="flex flex-col gap-3">
             <span className="text-xs font-semibold text-[#0284c7] leading-4">WHAT SUBSCRIBERS SAY</span>
-            <h2 className="text-[48px] leading-[48px] font-bold text-[#1f2937]">They Booked. You Can Too.</h2>
+            <h2 className="text-[36px] leading-[48px] md:text-[48px] md:leading-[48px] font-bold text-[#1f2937]">They Booked. You Can Too.</h2>
           </div>
 
+          {/* Single column on mobile, 3 columns on md+ */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
             {reviews.map((r) => (
               <div
@@ -434,7 +565,7 @@ export default function HomePage() {
       </section>
 
       {/* ─── 7. FINAL CTA ───────────────────────────────────────────────────── */}
-      <section className="bg-[#111827] py-[160px]">
+      <section className="bg-[#111827] py-16 md:py-[160px]">
         <div className="max-w-[1240px] mx-auto px-6 lg:px-0 flex flex-col gap-8 items-center">
 
           {/* Tag pill */}
@@ -446,25 +577,27 @@ export default function HomePage() {
 
           {/* Heading + sub */}
           <div className="flex flex-col gap-4 items-center max-w-[672px] text-center">
-            <h2 className="text-[48px] leading-[48px] font-bold text-white">
+            <h2 className="text-[36px] leading-[48px] md:text-[48px] md:leading-[48px] font-bold text-white">
               Your Next Weekend Trip Starts With One Email
             </h2>
-            <p className="text-lg font-normal text-[#9ca3af] leading-7">
+            <p className="text-base md:text-lg font-normal text-[#9ca3af] leading-6 md:leading-7">
               3 budget destinations land in your inbox every Thursday.<br />
               Hand-picked, genuinely cheap, ready to book.
             </p>
           </div>
 
+          {/* stackOnMobile: input + button stack vertically on mobile, both full-width */}
           <SubscribeForm dark centered />
         </div>
       </section>
 
       {/* ─── 8. FOOTER ──────────────────────────────────────────────────────── */}
       <footer className="bg-[#111827] border-t border-[#0c4a6e] py-8">
-        <div className="max-w-[1240px] mx-auto px-6 lg:px-0 flex flex-col sm:flex-row items-center justify-between gap-4">
+        {/* Mobile: stacked, centered. Desktop: row, space-between. */}
+        <div className="max-w-[1240px] mx-auto px-6 lg:px-0 flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
           <img src={LOGO_FOOTER} alt="Flajko" width={100} height={30} />
 
-          <p className="text-xs font-normal text-[#9ca3af] leading-4 text-center">
+          <p className="text-xs font-normal text-[#9ca3af] leading-4">
             © 2026 Flajko. All rights reserved.
           </p>
 
