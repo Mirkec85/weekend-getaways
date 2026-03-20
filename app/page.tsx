@@ -175,7 +175,7 @@ function SubscribeForm({
   return (
     <form onSubmit={handleSubmit} className={`flex flex-col gap-2 w-full ${centered ? 'items-center' : 'items-start'}`}>
       {/* Input + Button: stacked on mobile, inline on desktop */}
-      <div className="flex flex-col md:flex-row gap-2 w-full">
+      <div className={`flex flex-col md:flex-row gap-2 w-full ${centered ? 'md:justify-center' : ''}`}>
         <input
           type="email"
           value={email}
