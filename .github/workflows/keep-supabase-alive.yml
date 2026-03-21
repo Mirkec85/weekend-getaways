@@ -1,0 +1,26 @@
+name: Keep Supabase Alive
+
+on:
+  schedule:
+    - cron: '0 9 */3 * *'  # Every 3 days at 9:00 AM UTC
+  workflow_dispatch:        # Allow manual trigger
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Supabase health endpoint
+        run: |
+          RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" \
+            -H "apikey: ${{ secrets.SUPABASE_ANON_KEY }}" \
+            -H "Authorization: Bearer ${{ secrets.SUPABASE_ANON_KEY }}" \
+            "https://olalbfyvdmlvhtislvjf.supabase.co/rest/v1/subscribers?select=id&limit=1")
+
+          echo "HTTP status: $RESPONSE"
+
+          if [ "$RESPONSE" -ge 200 ] && [ "$RESPONSE" -lt 300 ]; then
+            echo "✅ Supabase ping successful (status $RESPONSE)"
+          else
+            echo "❌ Supabase ping failed (status $RESPONSE)"
+            exit 1
+          fi
