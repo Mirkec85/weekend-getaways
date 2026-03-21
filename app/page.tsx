@@ -286,12 +286,18 @@ export default function HomePage() {
 
         {/* CTA buttons at bottom */}
         <div className="flex flex-col gap-3 px-6 pb-6 shrink-0">
-          <button className="w-full px-5 py-2.5 bg-[#0284c7] text-white text-base font-semibold rounded-md hover:bg-[#0369a1] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0284c7] active:scale-[0.98]">
+          <Link
+            href="/sign-up"
+            className="w-full px-5 py-2.5 bg-[#0284c7] text-white text-base font-semibold rounded-md hover:bg-[#0369a1] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0284c7] active:scale-[0.98] text-center"
+          >
             Register
-          </button>
-          <button className="w-full px-5 py-2.5 text-[#111827] text-base font-semibold border border-[#0284c7] rounded-md hover:bg-[#f0f9ff] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0284c7] active:scale-[0.98]">
+          </Link>
+          <Link
+            href="/sign-in"
+            className="w-full px-5 py-2.5 text-[#111827] text-base font-semibold border border-[#0284c7] rounded-md hover:bg-[#f0f9ff] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0284c7] active:scale-[0.98] text-center"
+          >
             Log In
-          </button>
+          </Link>
         </div>
       </div>
 
@@ -318,12 +324,18 @@ export default function HomePage() {
 
           {/* Desktop: Log In + Register buttons — hidden on mobile */}
           <div className="hidden md:flex items-center gap-2">
-            <button className="px-3 py-2 text-sm font-semibold text-[#1f2937] rounded-md hover:bg-[#f9fafb] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0284c7] active:scale-[0.98]">
+            <Link
+              href="/sign-in"
+              className="px-3 py-2 text-sm font-semibold text-[#1f2937] rounded-md hover:bg-[#f9fafb] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0284c7] active:scale-[0.98]"
+            >
               Log In
-            </button>
-            <button className="px-3 py-2 text-sm font-semibold text-[#1f2937] border border-[#0284c7] rounded-md hover:bg-[#f0f9ff] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0284c7] active:scale-[0.98]">
+            </Link>
+            <Link
+              href="/sign-up"
+              className="px-3 py-2 text-sm font-semibold text-[#1f2937] border border-[#0284c7] rounded-md hover:bg-[#f0f9ff] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0284c7] active:scale-[0.98]"
+            >
               Register
-            </button>
+            </Link>
           </div>
 
           {/* Mobile: hamburger icon — hidden on md+ */}
