@@ -24,21 +24,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    supabaseBrowser.auth.getSession().then(({ data: { session } }) => {
+    supabaseBrowser.auth.getSession().then((result: any) => {
+      const session = result?.data?.session ?? null
+      setSession(session)
+      setUser(session?.user ?? null)
+      setLoading(false)
+    }).catch(() => setLoading(false))
+
+    const result: any = supabaseBrowser.auth.onAuthStateChange((_event: any, session: any) => {
       setSession(session)
       setUser(session?.user ?? null)
       setLoading(false)
     })
 
-    const {
-      data: { subscription },
-    } = supabaseBrowser.auth.onAuthStateChange((_event, session) => {
-      setSession(session)
-      setUser(session?.user ?? null)
-      setLoading(false)
-    })
-
-    return () => subscription.unsubscribe()
+    const subscription = result?.data?.subscription
+    return () => subscription?.unsubscribe()
   }, [])
 
   const signOut = async () => {
