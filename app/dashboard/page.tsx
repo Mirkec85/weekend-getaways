@@ -72,9 +72,9 @@ function useCountdown(targetTs: number) {
 
 const NAV_ITEMS = [
   { label: "Overview", href: "/dashboard", icon: LayoutDashboard, active: true },
-  { label: "Deals", href: "/dashboard/deals", icon: Ticket, active: false },
-  { label: "Settings", href: "/dashboard/settings", icon: Settings, active: false },
-  { label: "Account", href: "/dashboard/account", icon: User, active: false },
+  { label: "Deals", href: "#", icon: Ticket, active: false },
+  { label: "Settings", href: "#", icon: Settings, active: false },
+  { label: "Account", href: "#", icon: User, active: false },
 ];
 
 // ─── Deal data ─────────────────────────────────────────────────────────────────
