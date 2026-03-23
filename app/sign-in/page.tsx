@@ -30,7 +30,7 @@ export default function SignInPage() {
   // Redirect if already logged in
   useEffect(() => {
     if (!loading && user) {
-      router.replace('/')
+      router.replace('/dashboard')
     }
   }, [user, loading, router])
 
@@ -84,7 +84,7 @@ export default function SignInPage() {
       sessionStorage.setItem('flajko_session_only', 'true')
     }
 
-    router.push('/')
+    router.push('/dashboard')
   }
 
   if (loading) return null
