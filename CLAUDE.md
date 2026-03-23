@@ -1,4 +1,8 @@
-# Flajko — CLAUDE.md
+# CLAUDE.md — Frontend Website Rules
+
+## Always Do First
+- **Invoke the `frontend-design` skill** before writing any frontend code, every session, no exceptions.
+- **Invoke the `ui-ux-pro-max` skill** after invoking the 'frontend-design' skill before writing any frontend code, every session, no exceptions.
 
 ## What This Project Is
 
