@@ -5,20 +5,19 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
-  LayoutDashboard,
-  Ticket,
+  Gauge,
+  PlaneTakeoff,
   Settings,
   User,
   Plane,
   Bookmark,
-  CheckCircle2,
   Clock,
-  Heart,
   Bell,
   Menu,
   X,
-  ChevronRight,
   LogOut,
+  Building2,
+  ArrowRight,
 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 
@@ -26,7 +25,7 @@ import { useAuth } from "@/contexts/AuthContext";
 
 function getNextThursdayDrop(): number {
   const now = new Date();
-  const dayOfWeek = now.getUTCDay(); // 0=Sun … 4=Thu … 6=Sat
+  const dayOfWeek = now.getUTCDay();
   const daysUntilThursday = ((4 - dayOfWeek + 7) % 7) || 7;
 
   const target = new Date(now);
@@ -40,7 +39,6 @@ function getNextThursdayDrop(): number {
   return target.getTime();
 }
 
-// Computed once at module level — stable across renders
 const NEXT_DROP_TS = getNextThursdayDrop();
 
 function useCountdown(targetTs: number) {
@@ -71,8 +69,8 @@ function useCountdown(targetTs: number) {
 // ─── Nav items ────────────────────────────────────────────────────────────────
 
 const NAV_ITEMS = [
-  { label: "Overview", href: "/dashboard", icon: LayoutDashboard, active: true },
-  { label: "Deals", href: "#", icon: Ticket, active: false },
+  { label: "Overview", href: "/dashboard", icon: Gauge, active: true },
+  { label: "Deals", href: "#", icon: PlaneTakeoff, active: false },
   { label: "Settings", href: "#", icon: Settings, active: false },
   { label: "Account", href: "#", icon: User, active: false },
 ];
@@ -81,42 +79,37 @@ const NAV_ITEMS = [
 
 const DEALS = [
   {
-    city: "Rome",
-    country: "Italy",
+    city: "Paris",
     price: 89,
-    gradient: "from-[#F97316] via-[#EA580C] to-[#B91C1C]",
-    accent: "#F97316",
-    emoji: "🏛️",
+    image: "https://loremflickr.com/360/240/paris,eiffel,tower?lock=1",
+    dates: "Fri, 21 Mar → Sun, 23 Mar",
+    hotel: "Est. €110/night",
+    observed: "Thu 19 Mar 07:42 CET",
   },
   {
-    city: "Vienna",
-    country: "Austria",
+    city: "Prague",
     price: 112,
-    gradient: "from-[#6366F1] via-[#4F46E5] to-[#1E40AF]",
-    accent: "#6366F1",
-    emoji: "🎻",
+    image: "https://loremflickr.com/360/240/prague,castle,charles?lock=1",
+    dates: "Fri, 21 Mar → Sun, 23 Mar",
+    hotel: "Est. €110/night",
+    observed: "Thu 19 Mar 07:42 CET",
   },
   {
-    city: "Amsterdam",
-    country: "Netherlands",
+    city: "Milano",
     price: 118,
-    gradient: "from-[#0891B2] via-[#0E7490] to-[#065F46]",
-    accent: "#0891B2",
-    emoji: "🚲",
+    image: "https://loremflickr.com/360/240/milan,duomo,cathedral?lock=1",
+    dates: "Fri, 21 Mar → Sun, 23 Mar",
+    hotel: "Est. €110/night",
+    observed: "Thu 19 Mar 07:42 CET",
   },
 ];
-
-const DATES = "Fri 28 Mar → Sun 30 Mar";
 
 // ─── Sidebar ─────────────────────────────────────────────────────────────────
 
 function Sidebar({ onClose }: { onClose?: () => void }) {
-  const countdown = useCountdown(NEXT_DROP_TS);
   const { signOut } = useAuth();
   const router = useRouter();
   const [signingOut, setSigningOut] = useState(false);
-
-  const pad = (n: number) => String(n).padStart(2, "0");
 
   async function handleLogout() {
     setSigningOut(true);
@@ -130,20 +123,14 @@ function Sidebar({ onClose }: { onClose?: () => void }) {
   }
 
   return (
-    <aside className="flex h-full w-64 flex-col bg-white border-r border-gray-100">
+    <aside className="flex h-full w-[272px] flex-col bg-white p-4 gap-6">
       {/* Logo */}
-      <div className="flex h-16 items-center gap-3 px-5 border-b border-gray-100">
-        <Image
-          src="/logo.svg"
-          alt="Flajko"
-          width={88}
-          height={26}
-          priority
-        />
+      <div className="w-full pb-6 border-b border-gray-200 flex items-center justify-between">
+        <Image src="/logo.svg" alt="Flajko" width={100} height={30} priority />
         {onClose && (
           <button
             onClick={onClose}
-            className="ml-auto rounded-md p-1 text-gray-400 hover:text-gray-600 transition-colors"
+            className="rounded-md p-1 text-gray-400 hover:text-gray-600 transition-colors"
             aria-label="Close menu"
           >
             <X className="h-5 w-5" />
@@ -151,185 +138,37 @@ function Sidebar({ onClose }: { onClose?: () => void }) {
         )}
       </div>
 
-      {/* Nav */}
-      <nav className="flex-1 px-3 py-4 space-y-0.5">
-        {NAV_ITEMS.map((item) => (
-          <Link
-            key={item.label}
-            href={item.href}
-            className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors ${
-              item.active
-                ? "bg-[#EEF4FF] text-[#3174E0]"
-                : "text-gray-500 hover:bg-gray-50 hover:text-gray-800"
-            }`}
-          >
-            <item.icon
-              className={`h-4 w-4 flex-shrink-0 ${
-                item.active ? "text-[#3174E0]" : "text-gray-400"
+      {/* Nav + Log Out */}
+      <div className="flex flex-1 flex-col justify-between min-h-0">
+        {/* Nav */}
+        <nav className="flex flex-col gap-3">
+          {NAV_ITEMS.map((item) => (
+            <Link
+              key={item.label}
+              href={item.href}
+              className={`flex items-center gap-4 rounded-md px-4 py-3 text-base font-medium transition-colors ${
+                item.active
+                  ? "bg-sky-100 text-sky-600"
+                  : "text-gray-400 hover:bg-gray-50 hover:text-gray-600"
               }`}
-            />
-            {item.label}
-            {item.active && (
-              <ChevronRight className="ml-auto h-3.5 w-3.5 text-[#3174E0] opacity-60" />
-            )}
-          </Link>
-        ))}
-      </nav>
+            >
+              <item.icon className="h-5 w-5 flex-shrink-0" />
+              {item.label}
+            </Link>
+          ))}
+        </nav>
 
-      {/* Next drop */}
-      <div className="mx-3 mb-4 rounded-xl border border-gray-100 bg-gray-50 px-4 py-3.5">
-        <p className="text-[11px] font-semibold uppercase tracking-widest text-gray-400 mb-2">
-          Next deal drop
-        </p>
-        <div className="flex items-baseline gap-1.5">
-          <span className="text-[22px] font-bold tabular-nums text-gray-900 leading-none">
-            {pad(countdown.d)}
-          </span>
-          <span className="text-[10px] text-gray-400 font-medium">d</span>
-          <span className="text-[22px] font-bold tabular-nums text-gray-900 leading-none">
-            {pad(countdown.h)}
-          </span>
-          <span className="text-[10px] text-gray-400 font-medium">h</span>
-          <span className="text-[22px] font-bold tabular-nums text-gray-900 leading-none">
-            {pad(countdown.m)}
-          </span>
-          <span className="text-[10px] text-gray-400 font-medium">m</span>
-        </div>
-        <p className="mt-1.5 text-[11px] text-gray-400">Thu 07:42 CET</p>
-      </div>
-
-      {/* Log out */}
-      <div className="border-t border-gray-100 px-3 py-3">
+        {/* Log Out */}
         <button
           onClick={handleLogout}
           disabled={signingOut}
-          className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-sm text-gray-400 transition-colors hover:bg-gray-50 hover:text-gray-600 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="flex items-center gap-4 rounded-md px-4 py-3 text-base font-medium text-gray-400 transition-colors hover:bg-gray-50 hover:text-gray-600 disabled:opacity-50 disabled:cursor-not-allowed w-full"
         >
-          <LogOut className="h-4 w-4 flex-shrink-0" />
-          {signingOut ? "Signing out…" : "Log out"}
+          <LogOut className="h-5 w-5 flex-shrink-0" />
+          {signingOut ? "Signing out…" : "Log Out"}
         </button>
       </div>
     </aside>
-  );
-}
-
-// ─── Stat card ────────────────────────────────────────────────────────────────
-
-function StatCard({
-  icon: Icon,
-  label,
-  value,
-  sub,
-  accent,
-}: {
-  icon: React.ElementType;
-  label: string;
-  value: string;
-  sub?: string;
-  accent?: string;
-}) {
-  return (
-    <div className="rounded-xl border border-gray-100 bg-white px-5 py-4 shadow-[0_1px_3px_0_rgba(0,0,0,0.04)]">
-      <div className="flex items-start justify-between">
-        <p className="text-xs font-semibold uppercase tracking-widest text-gray-400">
-          {label}
-        </p>
-        <span
-          className="flex h-7 w-7 items-center justify-center rounded-lg"
-          style={{ backgroundColor: `${accent ?? "#3174E0"}18` }}
-        >
-          <Icon
-            className="h-3.5 w-3.5"
-            style={{ color: accent ?? "#3174E0" }}
-          />
-        </span>
-      </div>
-      <p className="mt-3 text-2xl font-bold tracking-tight text-gray-900 leading-none">
-        {value}
-      </p>
-      {sub && (
-        <p className="mt-1.5 text-xs text-gray-400">{sub}</p>
-      )}
-    </div>
-  );
-}
-
-// ─── Deal card ────────────────────────────────────────────────────────────────
-
-function DealCard({
-  city,
-  country,
-  price,
-  gradient,
-  emoji,
-}: {
-  city: string;
-  country: string;
-  price: number;
-  gradient: string;
-  emoji: string;
-}) {
-  const [saved, setSaved] = useState(false);
-
-  return (
-    <div className="group rounded-xl border border-gray-100 bg-white overflow-hidden shadow-[0_1px_3px_0_rgba(0,0,0,0.04)] transition-shadow hover:shadow-[0_4px_16px_0_rgba(0,0,0,0.07)]">
-      {/* Banner */}
-      <div className={`relative h-36 bg-gradient-to-br ${gradient}`}>
-        {/* Noise overlay */}
-        <div
-          className="absolute inset-0 opacity-[0.06]"
-          style={{
-            backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`,
-          }}
-        />
-        {/* Emoji */}
-        <span className="absolute bottom-3 left-4 text-2xl select-none">
-          {emoji}
-        </span>
-        {/* Heart */}
-        <button
-          onClick={() => setSaved((s) => !s)}
-          aria-label={saved ? "Unsave deal" : "Save deal"}
-          className="absolute right-3 top-3 flex h-8 w-8 items-center justify-center rounded-full bg-white/20 backdrop-blur-sm text-white transition-transform hover:scale-110 active:scale-95"
-        >
-          <Heart
-            className={`h-4 w-4 transition-all ${
-              saved ? "fill-rose-400 stroke-rose-400" : "stroke-white"
-            }`}
-          />
-        </button>
-      </div>
-
-      {/* Body */}
-      <div className="p-4">
-        <div className="flex items-start justify-between">
-          <div>
-            <p className="font-bold text-gray-900 leading-tight">{city}</p>
-            <p className="text-xs text-gray-400 mt-0.5">{country}</p>
-          </div>
-          <div className="text-right">
-            <p className="text-[11px] text-gray-400 leading-none">from</p>
-            <p className="text-xl font-bold text-gray-900 leading-tight">
-              €{price}
-            </p>
-          </div>
-        </div>
-
-        <div className="mt-3 flex items-center gap-1.5 text-xs text-gray-500">
-          <Plane className="h-3 w-3 text-gray-400 flex-shrink-0" />
-          <span>{DATES}</span>
-        </div>
-
-        <div className="mt-3.5">
-          <a
-            href="#"
-            className="flex h-8 w-full items-center justify-center rounded-lg border border-gray-200 text-xs font-semibold text-gray-700 transition-colors hover:border-gray-300 hover:bg-gray-50 active:bg-gray-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#3174E0] focus-visible:ring-offset-1"
-          >
-            View deal
-          </a>
-        </div>
-      </div>
-    </div>
   );
 }
 
@@ -350,13 +189,11 @@ export default function DashboardPage() {
       {/* ── Mobile sidebar overlay ── */}
       {mobileOpen && (
         <div className="fixed inset-0 z-50 flex lg:hidden">
-          {/* Backdrop */}
           <div
             className="absolute inset-0 bg-black/30 backdrop-blur-[2px]"
             onClick={() => setMobileOpen(false)}
           />
-          {/* Drawer */}
-          <div className="relative flex h-full w-64 flex-col shadow-xl">
+          <div className="relative flex h-full flex-col shadow-xl">
             <Sidebar onClose={() => setMobileOpen(false)} />
           </div>
         </div>
@@ -365,105 +202,206 @@ export default function DashboardPage() {
       {/* ── Main area ── */}
       <div className="flex flex-1 flex-col min-w-0 overflow-y-auto">
         {/* Mobile top bar */}
-        <header className="flex h-16 items-center justify-between border-b border-gray-100 bg-white px-4 lg:hidden">
-          <Image src="/logo.svg" alt="Flajko" width={72} height={22} />
+        <header className="flex h-16 items-center justify-between border-b border-gray-200 bg-white px-4 lg:hidden">
+          <Image src="/logo.svg" alt="Flajko" width={88} height={26} />
           <button
             onClick={() => setMobileOpen(true)}
             aria-label="Open menu"
-            className="rounded-lg p-2 text-gray-500 hover:bg-gray-100 transition-colors"
+            className="rounded-lg p-2 text-gray-400 hover:bg-gray-100 transition-colors"
           >
             <Menu className="h-5 w-5" />
           </button>
         </header>
 
         {/* Content */}
-        <main className="flex-1 px-6 py-8 md:px-8 max-w-[1100px] w-full mx-auto">
+        <main className="flex-1 px-6 py-6 md:px-10 flex flex-col gap-6">
           {/* Page header */}
-          <div className="mb-8">
-            <h1 className="text-[22px] font-bold text-gray-900 tracking-tight">
+          <div className="flex flex-col gap-1">
+            <h1 className="text-2xl font-bold text-gray-800 leading-9">
               Overview
             </h1>
-            <p className="mt-1 text-sm text-gray-400">
-              Your weekly flight deals at a glance.
+            <p className="text-sm text-gray-400 leading-5">
+              Your weekly flight deals at glance.
             </p>
           </div>
 
+          {/* ── Next Deal Drop banner ── */}
+          <div className="bg-white border border-sky-600 rounded-xl p-6 flex items-center gap-6">
+            {/* Airplane illustration */}
+            <div className="flex-shrink-0">
+              <Plane className="h-[60px] w-[60px] text-sky-500" strokeWidth={1.25} />
+            </div>
+
+            <div className="flex flex-1 items-center justify-between min-w-0 gap-4">
+              {/* Left: title + subtitle */}
+              <div className="flex flex-col gap-1">
+                <p className="text-lg font-bold text-gray-800 leading-7">
+                  Next Deal Drop
+                </p>
+                <p className="text-sm text-gray-400 leading-5">
+                  Don&apos;t miss this opportunity.
+                </p>
+              </div>
+
+              {/* Right: countdown */}
+              <div className="flex flex-col items-end gap-2 flex-shrink-0">
+                <div className="flex items-baseline gap-1 tabular-nums">
+                  <span className="text-[30px] font-bold text-gray-800 leading-[40px]">{pad(countdown.d)}</span>
+                  <span className="text-[14px] font-bold text-gray-400 leading-5 mr-2">d</span>
+                  <span className="text-[30px] font-bold text-gray-800 leading-[40px]">{pad(countdown.h)}</span>
+                  <span className="text-[14px] font-bold text-gray-400 leading-5 mr-2">h</span>
+                  <span className="text-[30px] font-bold text-gray-800 leading-[40px]">{pad(countdown.m)}</span>
+                  <span className="text-[14px] font-bold text-gray-400 leading-5 mr-2">m</span>
+                  <span className="text-[30px] font-bold text-gray-800 leading-[40px]">{pad(countdown.s)}</span>
+                  <span className="text-[14px] font-bold text-gray-400 leading-5">s</span>
+                </div>
+                <p className="text-sm font-medium text-gray-400 leading-5">
+                  Thursday 07:42 CET
+                </p>
+              </div>
+            </div>
+          </div>
+
           {/* ── Stat cards ── */}
-          <div className="grid grid-cols-2 gap-3 lg:grid-cols-4 mb-8">
-            <StatCard
-              icon={Ticket}
-              label="This week"
-              value="3 deals"
-              sub="Available now"
-              accent="#3174E0"
-            />
-            <StatCard
-              icon={Bookmark}
-              label="Saved"
-              value="0 deals"
-              sub="Start saving"
-              accent="#8B5CF6"
-            />
-            <StatCard
-              icon={CheckCircle2}
-              label="Booked"
-              value="0 trips"
-              sub="Book your first"
-              accent="#10B981"
-            />
-            <StatCard
-              icon={Clock}
-              label="Next drop"
-              value={`${pad(countdown.d)}d ${pad(countdown.h)}h`}
-              sub="Thu 07:42 CET"
-              accent="#F59E0B"
-            />
+          <div className="flex gap-5 flex-col sm:flex-row">
+            {/* HOT THIS WEEK */}
+            <div className="bg-white border border-gray-300 rounded-xl p-5 flex items-start justify-between flex-1">
+              <div className="flex flex-col gap-6">
+                <p className="text-base font-bold text-gray-400 leading-6 whitespace-nowrap">HOT THIS WEEK</p>
+                <div>
+                  <p className="text-xl font-bold text-gray-800 leading-8">7 Deals</p>
+                  <p className="text-xs text-gray-400 leading-4">Available now</p>
+                </div>
+              </div>
+              <div className="bg-orange-50 p-2 rounded-md flex-shrink-0">
+                <PlaneTakeoff className="h-4 w-4 text-orange-400" />
+              </div>
+            </div>
+
+            {/* SAVED */}
+            <div className="bg-white border border-gray-300 rounded-xl p-5 flex items-start justify-between flex-1">
+              <div className="flex flex-col gap-6">
+                <p className="text-base font-bold text-gray-400 leading-6">SAVED</p>
+                <div>
+                  <p className="text-xl font-bold text-gray-800 leading-8">0 Deals</p>
+                  <p className="text-xs text-gray-400 leading-4">Start saving deals</p>
+                </div>
+              </div>
+              <div className="bg-green-50 p-2 rounded-md flex-shrink-0">
+                <Bookmark className="h-4 w-4 text-green-500" />
+              </div>
+            </div>
+
+            {/* BOOKED */}
+            <div className="bg-white border border-gray-300 rounded-xl p-5 flex items-start justify-between flex-1">
+              <div className="flex flex-col gap-6">
+                <p className="text-base font-bold text-gray-400 leading-6">BOOKED</p>
+                <div>
+                  <p className="text-xl font-bold text-gray-800 leading-8">0 Deals</p>
+                  <p className="text-xs text-gray-400 leading-4">Book your first deal</p>
+                </div>
+              </div>
+              <div className="bg-red-50 p-2 rounded-md flex-shrink-0">
+                <Clock className="h-4 w-4 text-red-400" />
+              </div>
+            </div>
           </div>
 
           {/* ── This week's deals ── */}
-          <div className="mb-8">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-base font-bold text-gray-900">
-                This week&apos;s deals
+          <div className="flex flex-col gap-2">
+            {/* Section header */}
+            <div className="flex items-center justify-between">
+              <h2 className="text-lg font-bold text-gray-800 leading-7">
+                This Week&apos;s Deals
               </h2>
-              <a
-                href="#"
-                className="text-xs font-semibold text-[#3174E0] hover:text-[#2563C4] transition-colors"
-              >
-                View all
-              </a>
+              <button className="px-3 py-2 rounded-md text-sm font-semibold text-sky-600 hover:bg-sky-50 transition-colors">
+                View All
+              </button>
             </div>
 
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {/* Deal cards grid */}
+            <div className="flex gap-5 flex-col md:flex-row">
               {DEALS.map((deal) => (
-                <DealCard key={deal.city} {...deal} />
+                <div
+                  key={deal.city}
+                  className="bg-white border border-gray-300 rounded-2xl p-px flex-1 flex flex-col overflow-hidden"
+                >
+                  {/* Image */}
+                  <div className="aspect-[340/226] w-full relative overflow-hidden rounded-t-lg">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={deal.image}
+                      alt={deal.city}
+                      className="absolute inset-0 w-full h-full object-cover"
+                    />
+                  </div>
+
+                  {/* Body */}
+                  <div className="p-5 flex flex-col gap-2">
+                    <div className="flex flex-col gap-3">
+                      {/* City + Price */}
+                      <div className="flex items-start justify-between">
+                        <p className="text-base font-bold text-gray-800 leading-6">
+                          {deal.city}
+                        </p>
+                        <p className="text-lg font-bold text-sky-600 leading-7">
+                          from €{deal.price}
+                        </p>
+                      </div>
+
+                      {/* Detail rows */}
+                      <div className="flex flex-col gap-3">
+                        <div className="flex items-center gap-2">
+                          <Plane className="h-3 w-3 text-gray-500 flex-shrink-0" />
+                          <span className="text-xs font-semibold text-gray-500 leading-4">
+                            {deal.dates}
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <Building2 className="h-3 w-3 text-gray-500 flex-shrink-0" />
+                          <span className="text-xs font-semibold text-gray-500 leading-4">
+                            {deal.hotel}
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <Clock className="h-3 w-3 text-gray-500 flex-shrink-0" />
+                          <span className="text-xs font-semibold text-gray-500 leading-4">
+                            Observed: {deal.observed}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* View button */}
+                    <div className="flex justify-end">
+                      <button className="flex items-center gap-2 px-3 py-2 rounded-md text-sm font-semibold text-sky-600 hover:bg-sky-50 transition-colors">
+                        View
+                        <ArrowRight className="h-4 w-4" />
+                      </button>
+                    </div>
+                  </div>
+                </div>
               ))}
             </div>
           </div>
 
-          {/* ── CTA banner ── */}
-          <div className="rounded-xl border border-gray-100 bg-white px-6 py-5 shadow-[0_1px_3px_0_rgba(0,0,0,0.04)]">
-            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-              <div className="flex items-start gap-3">
-                <span className="mt-0.5 flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-[#EEF4FF]">
-                  <Bell className="h-4 w-4 text-[#3174E0]" />
-                </span>
-                <div>
-                  <p className="text-sm font-semibold text-gray-700">
-                    Add cities to your bucket list
-                  </p>
-                  <p className="mt-0.5 text-xs text-gray-400 leading-relaxed">
-                    We&apos;ll alert you when a deal lands for a destination
-                    you care about.
-                  </p>
-                </div>
+          {/* ── Bucket List CTA ── */}
+          <div className="bg-white border border-gray-300 rounded-xl p-5 flex items-center gap-4">
+            <div className="bg-sky-50 p-3 rounded-md flex-shrink-0">
+              <Bell className="h-5 w-5 text-sky-500" />
+            </div>
+            <div className="flex flex-1 items-center justify-between min-w-0 gap-4">
+              <div className="flex flex-col gap-1">
+                <p className="text-lg font-bold text-gray-800 leading-7">
+                  Add Cities to Your Bucket List
+                </p>
+                <p className="text-sm text-gray-400 leading-5">
+                  We will notify you when a deal lands for a destination you care about
+                </p>
               </div>
-              <a
-                href="#"
-                className="inline-flex h-9 flex-shrink-0 items-center justify-center rounded-lg border border-gray-200 px-4 text-xs font-semibold text-gray-700 transition-colors hover:border-gray-300 hover:bg-gray-50 active:bg-gray-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#3174E0] focus-visible:ring-offset-1 sm:w-auto w-full"
-              >
-                Set up alerts
-              </a>
+              <button className="bg-sky-600 text-white text-xs font-semibold px-5 py-2.5 rounded-md hover:bg-sky-700 transition-colors flex-shrink-0">
+                Set Up Alert
+              </button>
             </div>
           </div>
         </main>
