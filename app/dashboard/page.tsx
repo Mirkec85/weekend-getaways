@@ -71,6 +71,7 @@ function useCountdown(targetTs: number) {
 const NAV_ITEMS = [
   { label: "Overview", href: "/dashboard", icon: Gauge, active: true },
   { label: "Deals", href: "#", icon: PlaneTakeoff, active: false },
+  { label: "Alerts", href: "#", icon: Bell, active: false },
   { label: "Settings", href: "#", icon: Settings, active: false },
   { label: "Account", href: "#", icon: User, active: false },
 ];
@@ -228,8 +229,8 @@ export default function DashboardPage() {
           {/* ── Next Deal Drop banner ── */}
           <div className="bg-white border border-sky-600 rounded-xl p-6 flex items-center gap-6">
             {/* Airplane illustration */}
-            <div className="flex-shrink-0">
-              <Plane className="h-[60px] w-[60px] text-sky-500" strokeWidth={1.25} />
+            <div className="flex-shrink-0 h-[60px] w-[76px] relative">
+              <Image src="/airplane.svg" alt="" fill className="object-contain" />
             </div>
 
             <div className="flex flex-1 items-center justify-between min-w-0 gap-4">
@@ -327,12 +328,13 @@ export default function DashboardPage() {
                   className="bg-white border border-gray-300 rounded-2xl p-px flex-1 flex flex-col overflow-hidden"
                 >
                   {/* Image */}
-                  <div className="aspect-[340/226] w-full relative overflow-hidden rounded-t-lg">
+                  <div className="w-full overflow-hidden rounded-t-lg" style={{ maxHeight: "230px" }}>
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src={deal.image}
                       alt={deal.city}
-                      className="absolute inset-0 w-full h-full object-cover"
+                      className="w-full object-cover"
+                      style={{ maxHeight: "230px" }}
                     />
                   </div>
 

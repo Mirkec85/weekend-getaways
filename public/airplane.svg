@@ -1,0 +1,22 @@
+<svg width="76" height="60" viewBox="0 0 76 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Fuselage -->
+  <path d="M8 28C8 28 12 22 22 22H54C60 22 66 25 68 28C66 31 60 34 54 34H22C12 34 8 28 8 28Z" fill="#0284c7"/>
+  <!-- Nose -->
+  <path d="M54 22C54 22 62 22 68 28C62 34 54 34 54 34L54 22Z" fill="#0369a1"/>
+  <!-- Tail fin -->
+  <path d="M8 28L14 14L22 22H8Z" fill="#0284c7"/>
+  <path d="M8 28L14 42L22 34H8Z" fill="#0369a1"/>
+  <!-- Tail horizontal -->
+  <path d="M8 24H20L16 18H8Z" fill="#0284c7"/>
+  <path d="M8 32H20L16 38H8Z" fill="#0369a1"/>
+  <!-- Main wing -->
+  <path d="M28 22L18 8L26 8L42 22H28Z" fill="#0284c7"/>
+  <path d="M28 34L18 48L26 48L42 34H28Z" fill="#0369a1"/>
+  <!-- Windows -->
+  <circle cx="46" cy="27" r="2.5" fill="white" opacity="0.9"/>
+  <circle cx="40" cy="27" r="2.5" fill="white" opacity="0.9"/>
+  <circle cx="34" cy="27" r="2.5" fill="white" opacity="0.9"/>
+  <!-- Engine -->
+  <ellipse cx="34" cy="20" rx="4" ry="2.5" fill="#0369a1"/>
+  <ellipse cx="34" cy="36" rx="4" ry="2.5" fill="#0284c7"/>
+</svg>
