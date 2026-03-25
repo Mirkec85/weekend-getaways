@@ -63,7 +63,7 @@ const DEALS = [
   {
     city: "Paris",
     price: 89,
-    image: "https://loremflickr.com/360/240/paris,eiffel,tower?lock=1",
+    image: "https://loremflickr.com/680/452/paris,eiffel,tower?lock=1",
     dates: "Fri, 21 Mar → Sun, 23 Mar",
     hotel: "Est. €110/night",
     observed: "Thu 19 Mar 07:42 CET",
@@ -71,7 +71,7 @@ const DEALS = [
   {
     city: "Prague",
     price: 112,
-    image: "https://loremflickr.com/360/240/prague,castle,charles?lock=1",
+    image: "https://loremflickr.com/680/452/prague,castle,charles?lock=1",
     dates: "Fri, 21 Mar → Sun, 23 Mar",
     hotel: "Est. €110/night",
     observed: "Thu 19 Mar 07:42 CET",
@@ -79,7 +79,7 @@ const DEALS = [
   {
     city: "Milano",
     price: 118,
-    image: "https://loremflickr.com/360/240/milan,duomo,cathedral?lock=1",
+    image: "https://loremflickr.com/680/452/milan,duomo,cathedral?lock=1",
     dates: "Fri, 21 Mar → Sun, 23 Mar",
     hotel: "Est. €110/night",
     observed: "Thu 19 Mar 07:42 CET",
@@ -94,9 +94,10 @@ export default function DashboardPage() {
 
   return (
     <div className="flex flex-1 flex-col min-w-0 overflow-y-auto">
-      <main className="flex-1 px-6 py-6 md:px-10 flex flex-col gap-6">
-        {/* Page header */}
-        <div className="flex flex-col gap-1">
+      <main className="flex-1 px-6 py-6 md:px-10 flex flex-col gap-5">
+
+        {/* ── Page header ── */}
+        <div className="flex flex-col gap-1 pt-0">
           <h1 className="text-2xl font-bold text-gray-800 leading-9">
             Overview
           </h1>
@@ -106,14 +107,15 @@ export default function DashboardPage() {
         </div>
 
         {/* ── Next Deal Drop banner ── */}
-        <div className="bg-white border border-sky-600 rounded-xl p-6 flex items-center gap-6">
+        <div className="bg-white border border-sky-600 rounded-xl p-6 flex items-start gap-6">
           {/* Airplane illustration */}
-          <div className="flex-shrink-0 h-[60px] w-[76px] relative">
+          <div className="flex-shrink-0 h-[60px] w-[76px] relative mt-0.5">
             <Image src="/airplane.svg" alt="" fill className="object-contain" />
           </div>
 
-          <div className="flex flex-1 items-center justify-between min-w-0 gap-4">
-            {/* Left: title + subtitle */}
+          {/* Right: stacks vertically on mobile, side-by-side on md+ */}
+          <div className="flex flex-1 flex-col md:flex-row md:items-center md:justify-between gap-6 md:gap-4 min-w-0">
+            {/* Title + subtitle */}
             <div className="flex flex-col gap-1">
               <p className="text-lg font-bold text-gray-800 leading-7">
                 Next Deal Drop
@@ -123,17 +125,17 @@ export default function DashboardPage() {
               </p>
             </div>
 
-            {/* Right: countdown */}
+            {/* Countdown — right-aligned */}
             <div className="flex flex-col items-end gap-2 flex-shrink-0">
               <div className="flex items-baseline gap-1 tabular-nums">
                 <span className="text-[30px] font-bold text-gray-800 leading-[40px]">{pad(countdown.d)}</span>
-                <span className="text-[14px] font-bold text-gray-400 leading-5 mr-2">d</span>
+                <span className="text-sm font-bold text-gray-400 leading-5 mr-2">d</span>
                 <span className="text-[30px] font-bold text-gray-800 leading-[40px]">{pad(countdown.h)}</span>
-                <span className="text-[14px] font-bold text-gray-400 leading-5 mr-2">h</span>
+                <span className="text-sm font-bold text-gray-400 leading-5 mr-2">h</span>
                 <span className="text-[30px] font-bold text-gray-800 leading-[40px]">{pad(countdown.m)}</span>
-                <span className="text-[14px] font-bold text-gray-400 leading-5 mr-2">m</span>
+                <span className="text-sm font-bold text-gray-400 leading-5 mr-2">m</span>
                 <span className="text-[30px] font-bold text-gray-800 leading-[40px]">{pad(countdown.s)}</span>
-                <span className="text-[14px] font-bold text-gray-400 leading-5">s</span>
+                <span className="text-sm font-bold text-gray-400 leading-5">s</span>
               </div>
               <p className="text-sm font-medium text-gray-400 leading-5">
                 Thursday 07:42 CET
@@ -142,24 +144,26 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* ── Stat cards ── */}
-        <div className="flex gap-5 flex-col sm:flex-row">
+        {/* ── Stat cards — 1-col mobile, 3-col md+ ── */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
           {/* HOT THIS WEEK */}
-          <div className="bg-white border border-gray-300 rounded-xl p-5 flex items-start justify-between flex-1">
+          <div className="bg-white border border-gray-300 rounded-xl p-5 flex items-start justify-between">
             <div className="flex flex-col gap-6">
-              <p className="text-base font-bold text-gray-400 leading-6 whitespace-nowrap">HOT THIS WEEK</p>
+              <p className="text-base font-bold text-gray-400 leading-6 whitespace-nowrap">
+                HOT THIS WEEK
+              </p>
               <div>
                 <p className="text-xl font-bold text-gray-800 leading-8">7 Deals</p>
                 <p className="text-xs text-gray-400 leading-4">Available now</p>
               </div>
             </div>
             <div className="bg-orange-50 p-2 rounded-md flex-shrink-0">
-              <PlaneTakeoff className="h-4 w-4 text-orange-400" />
+              <PlaneTakeoff className="h-5 w-5 text-orange-400" />
             </div>
           </div>
 
           {/* SAVED */}
-          <div className="bg-white border border-gray-300 rounded-xl p-5 flex items-start justify-between flex-1">
+          <div className="bg-white border border-gray-300 rounded-xl p-5 flex items-start justify-between">
             <div className="flex flex-col gap-6">
               <p className="text-base font-bold text-gray-400 leading-6">SAVED</p>
               <div>
@@ -168,12 +172,12 @@ export default function DashboardPage() {
               </div>
             </div>
             <div className="bg-green-50 p-2 rounded-md flex-shrink-0">
-              <Bookmark className="h-4 w-4 text-green-500" />
+              <Bookmark className="h-5 w-5 text-green-500" />
             </div>
           </div>
 
           {/* BOOKED */}
-          <div className="bg-white border border-gray-300 rounded-xl p-5 flex items-start justify-between flex-1">
+          <div className="bg-white border border-gray-300 rounded-xl p-5 flex items-start justify-between">
             <div className="flex flex-col gap-6">
               <p className="text-base font-bold text-gray-400 leading-6">BOOKED</p>
               <div>
@@ -182,7 +186,7 @@ export default function DashboardPage() {
               </div>
             </div>
             <div className="bg-red-50 p-2 rounded-md flex-shrink-0">
-              <Clock className="h-4 w-4 text-red-400" />
+              <Clock className="h-5 w-5 text-red-400" />
             </div>
           </div>
         </div>
@@ -199,21 +203,21 @@ export default function DashboardPage() {
             </button>
           </div>
 
-          {/* Deal cards grid */}
-          <div className="flex gap-5 flex-col md:flex-row">
+          {/* Deal cards — 1-col mobile, 2-col md, 3-col lg */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
             {DEALS.map((deal) => (
               <div
                 key={deal.city}
-                className="bg-white border border-gray-300 rounded-2xl p-px flex-1 flex flex-col overflow-hidden"
+                className="bg-white border border-gray-300 rounded-2xl p-px flex flex-col overflow-hidden"
               >
-                {/* Image */}
-                <div className="w-full overflow-hidden rounded-t-lg" style={{ maxHeight: "230px" }}>
+                {/* Hero image — 340:226 aspect ratio */}
+                <div className="relative w-full overflow-hidden rounded-tl-lg rounded-tr-lg"
+                  style={{ aspectRatio: "340/226" }}>
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={deal.image}
                     alt={deal.city}
-                    className="w-full object-cover"
-                    style={{ maxHeight: "230px" }}
+                    className="absolute inset-0 w-full h-full object-cover"
                   />
                 </div>
 
@@ -267,11 +271,11 @@ export default function DashboardPage() {
         </div>
 
         {/* ── Bucket List CTA ── */}
-        <div className="bg-white border border-gray-300 rounded-xl p-5 flex items-center gap-4">
+        <div className="bg-white border border-gray-300 rounded-xl p-5 flex items-start gap-4">
           <div className="bg-sky-50 p-3 rounded-md flex-shrink-0">
             <Bell className="h-5 w-5 text-sky-500" />
           </div>
-          <div className="flex flex-1 items-center justify-between min-w-0 gap-4">
+          <div className="flex flex-1 flex-col gap-6 min-w-0">
             <div className="flex flex-col gap-1">
               <p className="text-lg font-bold text-gray-800 leading-7">
                 Add Cities to Your Bucket List
@@ -280,11 +284,12 @@ export default function DashboardPage() {
                 We will notify you when a deal lands for a destination you care about
               </p>
             </div>
-            <button className="bg-sky-600 text-white text-xs font-semibold px-5 py-2.5 rounded-md hover:bg-sky-700 transition-colors flex-shrink-0">
+            <button className="self-start bg-sky-600 text-white text-xs font-semibold px-5 py-2.5 rounded-md hover:bg-sky-700 transition-colors">
               Set Up Alert
             </button>
           </div>
         </div>
+
       </main>
     </div>
   );
