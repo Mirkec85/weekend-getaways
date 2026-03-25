@@ -11,7 +11,7 @@ import {
   Settings,
   User,
   LogOut,
-  X,
+  XCircle,
 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 
@@ -40,28 +40,70 @@ export default function Sidebar({ onClose }: { onClose?: () => void }) {
     }
   }
 
+  // ── Mobile drawer (slide-in overlay) ──────────────────────────────────────
+  if (onClose) {
+    return (
+      <aside className="flex h-full w-full flex-col bg-white">
+        {/* Header: XCircle close button only, top-right */}
+        <div className="flex h-[65px] flex-shrink-0 items-center justify-end px-6">
+          <button
+            onClick={onClose}
+            className="text-gray-400 hover:text-gray-600 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 rounded-full"
+            aria-label="Close menu"
+          >
+            <XCircle className="h-6 w-6" />
+          </button>
+        </div>
+
+        {/* Nav + Log Out */}
+        <div className="flex flex-1 flex-col justify-between overflow-y-auto p-6 pt-0">
+          <nav className="flex flex-col gap-3">
+            {NAV_ITEMS.map((item) => {
+              const isActive = item.href !== "#" && pathname === item.href;
+              return (
+                <Link
+                  key={item.label}
+                  href={item.href}
+                  onClick={onClose}
+                  className={`flex items-center gap-4 rounded-md px-4 py-3 text-lg font-medium transition-colors ${
+                    isActive
+                      ? "bg-sky-100 text-sky-600"
+                      : "text-gray-400 hover:bg-gray-50 hover:text-gray-600"
+                  }`}
+                >
+                  <item.icon className="h-6 w-6 flex-shrink-0" />
+                  {item.label}
+                </Link>
+              );
+            })}
+          </nav>
+
+          <button
+            onClick={handleLogout}
+            disabled={signingOut}
+            className="flex items-center gap-4 rounded-md px-4 py-3 text-lg font-medium text-gray-400 transition-colors hover:bg-gray-50 hover:text-gray-600 disabled:opacity-50 disabled:cursor-not-allowed w-full"
+          >
+            <LogOut className="h-6 w-6 flex-shrink-0" />
+            {signingOut ? "Signing out…" : "Log Out"}
+          </button>
+        </div>
+      </aside>
+    );
+  }
+
+  // ── Desktop persistent sidebar ─────────────────────────────────────────────
   return (
     <aside className="flex h-full w-[272px] flex-col bg-white p-4 gap-6">
       {/* Logo */}
-      <div className="w-full pb-6 border-b border-gray-200 flex items-center justify-between">
+      <div className="w-full pb-6 border-b border-gray-200 flex items-center">
         <Image src="/logo.svg" alt="Flajko" width={100} height={30} priority />
-        {onClose && (
-          <button
-            onClick={onClose}
-            className="rounded-md p-1 text-gray-400 hover:text-gray-600 transition-colors"
-            aria-label="Close menu"
-          >
-            <X className="h-5 w-5" />
-          </button>
-        )}
       </div>
 
       {/* Nav + Log Out */}
       <div className="flex flex-1 flex-col justify-between min-h-0">
         <nav className="flex flex-col gap-3">
           {NAV_ITEMS.map((item) => {
-            const isActive =
-              item.href !== "#" && pathname === item.href;
+            const isActive = item.href !== "#" && pathname === item.href;
             return (
               <Link
                 key={item.label}
